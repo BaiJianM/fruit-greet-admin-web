@@ -151,10 +151,11 @@
       </div>
       <div class="page-box">
         <el-pagination
+            @size-change="handleSizeChange"
             @current-change="handlePageChange"
             :current-page="page"
             :page-size="10"
-            layout="total, prev, pager, next, jumper"
+            layout="total, sizes, prev, pager, next, jumper"
             :total="total"
         >
         </el-pagination>
@@ -1618,6 +1619,14 @@ export default {
       } else if (pindex == 5) {
         this.order_status = "101,102,103,202,203,300,301,302,303,401,801,802";
       }
+      this.getList();
+    },
+
+    handleSizeChange(val) {
+      this.sieze = val;
+      //保存到localStorage
+      localStorage.setItem("orderPage", this.page);
+      localStorage.setItem("orderFilterForm", JSON.stringify(this.filterForm));
       this.getList();
     },
 

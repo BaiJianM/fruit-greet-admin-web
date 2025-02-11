@@ -154,8 +154,8 @@
                 </el-table>
             </div>
             <div class="page-box">
-                <el-pagination @current-change="handlePageChange" :current-page="page" :page-size="size"
-                               layout="total, prev, pager, next, jumper" :total="total">
+                <el-pagination @size-change="handleSizeChange" @current-change="handlePageChange" :current-page="page" :page-size="size"
+                               layout="total, sizes, prev, pager, next, jumper" :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -315,6 +315,25 @@
                 else if (pindex == 3) {
                     this.getDropList();
                     this.pIndex = 3;
+                }
+            },
+            handleSizeChange(val) {
+                this.size = val;
+                let nIndex = this.pIndex;
+                if (nIndex == 0) {
+                    this.getList();
+                }
+                else if (nIndex == 1) {
+                    this.getOnSaleList();
+                }
+                else if (nIndex == 2) {
+                    this.getOutList();
+                }
+                else if (nIndex == 3) {
+                    this.getDropList();
+                }
+                else if (nIndex == 4) {
+                    this.sortOrder(this.num);
                 }
             },
             handlePageChange(val) {

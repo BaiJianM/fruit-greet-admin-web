@@ -51,7 +51,8 @@
 				</el-table>
 			</div>
 			<div class="page-box">
-				<el-pagination background @current-change="handlePageChange" :current-page.sync="page" :page-size="10" layout="total, prev, pager, next, jumper" :total="total">
+				<el-pagination background @size-change="handleSizeChange" @current-change="handlePageChange" :current-page.sync="page" 
+				:page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="total">
 				</el-pagination>
 			</div>
 		</div>
@@ -78,6 +79,12 @@ export default {
             this.axios.post('user/updateInfo', { id: row.id,nickname:row.nickname }).then((response) => {
 
             })
+		},
+		handleSizeChange(val) {
+			this.size = val;
+			//保存到localStorage
+			localStorage.setItem('userPage', this.page)
+			this.getList()
 		},
 		handlePageChange(val) {
 			this.page = val;
