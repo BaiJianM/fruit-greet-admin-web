@@ -409,7 +409,7 @@
 			getSpecData() {
 				let id = this.infoForm.id;
 				this.axios.post('specification/getGoodsSpec?id=' + id).then((response) => {
-					if (response.data.errno === 0) {
+					if (response.data.code === 200) {
 						let info = response.data.data;
 						this.specData = info.specData;
 						this.specValue = info.specValue;
@@ -552,7 +552,7 @@
 					type: 'warning'
 				}).then(() => {
 					this.axios.post('goods/copygoods?id=' + this.infoForm.id).then((response) => {
-						if (response.data.errno === 0) {
+						if (response.data.code === 200) {
 							this.$message({
 								type: 'success',
 								message: '复制成功!'
@@ -605,7 +605,7 @@
 							specValue: this.specValue,
 							cateId: this.cateId,
 						}).then((response) => {
-							if (response.data.errno === 0) {
+							if (response.data.code === 200) {
 								this.$message({
 									type: 'success',
 									message: '保存成功'

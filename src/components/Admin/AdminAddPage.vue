@@ -91,7 +91,7 @@
                             user: user,
                             change:this.change,
                         }).then((response) => {
-                            if (response.data.errno === 0) {
+                            if (response.data.code === 200) {
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功'
@@ -133,7 +133,7 @@
                         this.axios.post('admin/adminAdd', {
                             user: user,
                         }).then((response) => {
-                            if (response.data.errno === 0) {
+                            if (response.data.code === 200) {
                                 this.$message({
                                     type: 'success',
                                     message: '添加成功'
@@ -157,7 +157,7 @@
                 this.axios.post('admin/adminDetail', {
                     id: that.infoForm.id
                 }).then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         let resInfo = response.data.data;
                         that.infoForm = resInfo;
                     }

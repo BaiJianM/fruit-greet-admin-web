@@ -119,7 +119,7 @@
             changeStatus() {
                 this.infoForm.autoDelivery == true ? this.infoForm.autoDelivery = 1 : this.infoForm.autoDelivery = 0;
                 this.axios.post('admin/changeAutoStatus', {status:this.infoForm.autoDelivery}).then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         this.$message({
                             type: 'success',
                             message: '更改成功'
@@ -145,7 +145,7 @@
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
                         this.axios.post('admin/storeShipperSettings', this.infoForm).then((response) => {
-                            if (response.data.errno === 0) {
+                            if (response.data.code === 200) {
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功'

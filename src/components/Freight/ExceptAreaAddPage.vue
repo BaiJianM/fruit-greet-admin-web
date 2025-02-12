@@ -129,7 +129,7 @@
                             table: that.tableData,
                             info: that.infoForm
                         }).then((response) => {
-                            if (response.data.errno === 0) {
+                            if (response.data.code === 200) {
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功'
@@ -164,7 +164,7 @@
                             table: that.tableData,
                             info: that.infoForm
                         }).then((response) => {
-                            if (response.data.errno === 0) {
+                            if (response.data.code === 200) {
                                 this.$message({
                                     type: 'success',
                                     message: '添加成功'
@@ -191,7 +191,7 @@
             getAllAreaData() {
                 let that = this;
                 this.axios.post('shipper/getareadata').then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         that.areaData = response.data.data;
                     }
                 })

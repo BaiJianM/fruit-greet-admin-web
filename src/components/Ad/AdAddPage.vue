@@ -104,7 +104,7 @@
                     id: 0,
                     imageUrl: '',
                     linkType: 0,
-                    enabled: 0,
+                    enabled: false,
                     endTime: '',
                     goodsId:0,
                     link:''
@@ -176,7 +176,7 @@
             },
             relateGoodsClick() {
                 this.axios.post('ad/getallrelate', {id: this.infoForm.id}).then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         this.chooseRelateGoods = response.data.data
                     }
                 });
@@ -270,7 +270,6 @@
                     }
                 }).then((response) => {
                     let resInfo = response.data.data;
-                    resInfo.enabled = resInfo.enabled ? "1" : "0";
                     that.infoForm = resInfo;
                     that.infoForm.endTime = resInfo.end_time * 1000;
                     let info = {

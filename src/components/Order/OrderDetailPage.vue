@@ -493,7 +493,7 @@ export default {
           this.axios
             .post("order/goodsListDelete", this.goodsData)
             .then((response) => {
-              if (response.data.errno === 0) {
+              if (response.data.code === 200) {
                 this.$message({
                   type: "success",
                   message: "删除成功!",
@@ -552,7 +552,7 @@ export default {
           console.log("++---------------------------++");
           console.log(response);
           console.log("++---------------------------++");
-          if (response.data.errno === 0) {
+          if (response.data.code === 200) {
             this.$message({
               type: "success",
               message: "保存成功!",
@@ -574,7 +574,7 @@ export default {
           console.log("++---------------------------++");
           console.log(response);
           console.log("++---------------------------++");
-          if (response.data.errno === 0) {
+          if (response.data.code === 200) {
             this.$message({
               type: "success",
               message: "修改成功!",

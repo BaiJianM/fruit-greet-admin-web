@@ -88,7 +88,7 @@
               <div
                 v-for="(element, index) in gallery_list"
                 class="gallery-item"
-                v-if="element.is_delete == 0"
+                v-if="!element.is_delete"
               >
                 <el-image
                   :preview-src-list="previewList"
@@ -421,7 +421,7 @@ export default {
         list_pic_url: "",
         goods_brief: "",
         goods_desc: "",
-        is_on_sale: 0,
+        is_on_sale: false,
         is_new: false,
         // is_index: false,
       },
@@ -531,7 +531,7 @@ export default {
         })
         .then(() => {
           let arr = that.gallery_list;
-          arr[index].is_delete = 1;
+          arr[index].is_delete = true;
         })
         .catch(() => {});
     },
@@ -566,7 +566,7 @@ export default {
       let data = {
         id: 0,
         url: urlData,
-        is_delete: 0,
+        is_delete: false,
       };
       this.gallery_list.push(data);
     },
@@ -620,7 +620,7 @@ export default {
       this.axios
         .post("specification/getGoodsSpec?id=" + id)
         .then((response) => {
-          if (response.data.errno === 0) {
+          if (response.data.code === 200) {
             let info = response.data.data;
             this.specData = info.specData;
             this.specValue = info.specValue;
@@ -768,7 +768,7 @@ export default {
         this.axios
           .post("goods/copygoods?id=" + this.infoForm.id)
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.$message({
                 type: "success",
                 message: "复制成功!",
@@ -831,7 +831,7 @@ export default {
               cateId: this.cateId,
             })
             .then((response) => {
-              if (response.data.errno === 0) {
+              if (response.data.code === 200) {
                 this.$message({
                   type: "success",
                   message: "保存成功",
@@ -907,8 +907,6 @@ export default {
           let resInfo = response.data.data;
           let goodsInfo = resInfo.info;
           // goodsInfo.is_index = goodsInfo.is_index ? true : false;
-          goodsInfo.is_new = goodsInfo.is_new ? true : false;
-          goodsInfo.is_on_sale = goodsInfo.is_on_sale ? "1" : "0";
           that.infoForm = goodsInfo;
           that.kdValue = goodsInfo.freight_template_id;
           that.cateId = resInfo.category_id;

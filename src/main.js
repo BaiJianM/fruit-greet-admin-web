@@ -18,7 +18,7 @@ import store from './store'
 import router from './router'
 
 // import '@/icons' // icon
-// import '@/permission' // permission control
+import '@/permission' // permission control
 
 /**
  * If you don't want to use mock-server
@@ -41,24 +41,24 @@ Vue.use(VueAxios, Axios);
 
 Vue.config.productionTip = false
 
-router.beforeEach((to, from, next) => {
-
-  let token = localStorage.getItem('token') || '';
-
-  //配置接口信息
-  // Axios.defaults.baseURL = 'http://www.地址.com:8360/admin/';
-  Axios.defaults.baseURL = api.rootUrl;
-  Axios.defaults.headers.common['X-Hioshop-Token'] = token;
-
-  if (!token && to.name !== 'login') {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    })
-  } else {
-    next()
-  }
-});
+// router.beforeEach((to, from, next) => {
+//
+//   let token = localStorage.getItem('token') || '';
+//
+//   //配置接口信息
+//   // Axios.defaults.baseURL = 'http://www.地址.com:8360/admin/';
+//   Axios.defaults.baseURL = api.rootUrl;
+//   Axios.defaults.headers.common['X-Hioshop-Token'] = token;
+//
+//   if (!token && to.name !== 'login') {
+//     next({
+//       path: '/login',
+//       query: { redirect: to.fullPath }
+//     })
+//   } else {
+//     next()
+//   }
+// });
 
 new Vue({
   el: '#app',

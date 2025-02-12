@@ -1364,6 +1364,7 @@ import ElButton from "../../../node_modules/element-ui/packages/button/src/butto
 // Vue.component(VueBarcode.name, VueBarcode);
 
 // import { Button } from 'element-ui';
+
 export default {
   data() {
     return {
@@ -1422,6 +1423,7 @@ export default {
       receiveOptions: [],
       receiver: {},
       sender: {},
+      orderListLoading: true,
     };
   },
   methods: {
@@ -1489,7 +1491,7 @@ export default {
               id: info.id,
             })
             .then((response) => {
-              if (response.data.errno === 0) {
+              if (response.data.code === 200) {
                 this.$message({
                   type: "success",
                   message: "保存成功!",
@@ -1522,7 +1524,7 @@ export default {
             id: info.id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.$message({
                 type: "success",
                 message: "保存成功!",
@@ -1544,7 +1546,7 @@ export default {
             id: id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.$message({
                 type: "success",
                 message: "保存成功!",
@@ -1564,7 +1566,7 @@ export default {
             id: id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.$message({
                 type: "success",
                 message: "保存成功!",
@@ -1657,7 +1659,7 @@ export default {
             })
             .then((response) => {
               console.log(response.data);
-              if (response.data.errno === 0) {
+              if (response.data.code === 200) {
                 this.$message({
                   type: "success",
                   message: "删除成功!",
@@ -1686,6 +1688,7 @@ export default {
             this.tableData = response.data.data.records;
             this.page = response.data.data.current;
             this.total = response.data.data.total;
+            this.orderListLoading = false;
           });
     },
     orderEdit(item) {
@@ -1714,7 +1717,7 @@ export default {
             },
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.expressType = 0;
               this.getOrderInfo(this.order_id);
               this.dialogFormVisible = true;
@@ -1730,7 +1733,7 @@ export default {
             },
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               let express = response.data.data;
               this.expressType = express.express_type;
               let orderInfo = this.orderInfo;
@@ -1773,7 +1776,7 @@ export default {
           })
           .then((response) => {
             console.log(response.data);
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.dialogExpressVisible = true;
             } else {
               this.expressType = 0;
@@ -1858,7 +1861,7 @@ export default {
             order_id: id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.getList();
               this.$message({
                 type: "success",
@@ -1878,7 +1881,7 @@ export default {
             order_id: this.order_id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.getList();
               this.printMiandan = false;
               this.dialogFormVisible = false;
@@ -1904,7 +1907,7 @@ export default {
             order_id: this.order_id,
           })
           .then((response) => {
-            if (response.data.errno === 0) {
+            if (response.data.code === 200) {
               this.getList();
               this.printMiandan = false;
               this.dialogFormVisible = false;

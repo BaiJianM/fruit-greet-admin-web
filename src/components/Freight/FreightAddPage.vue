@@ -400,7 +400,7 @@
                     defaultData: that.defaultData,
                     info: that.infoForm
                 }).then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         this.$message({
                             type: 'success',
                             message: '保存成功'
@@ -475,7 +475,7 @@
                     defaultData: that.defaultData,
                     info: that.infoForm
                 }).then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         that.$message({
                             type: 'success',
                             message: '添加成功'
@@ -500,7 +500,7 @@
                     rows.splice(index, 1);
                     // this.axios.post('ad/destory', { id: row.id }).then((response) => {
                     //     console.log(response.data)
-                    //     if (response.data.errno === 0) {
+                    //     if (response.data.code === 200) {
                     //         this.$message({
                     //             type: 'success',
                     //             message: '删除成功!'
@@ -533,7 +533,7 @@
             getAllAreaData() {
                 let that = this;
                 this.axios.post('shipper/getareadata').then((response) => {
-                    if (response.data.errno === 0) {
+                    if (response.data.code === 200) {
                         that.areaData = response.data.data;
                         // console.log(that.areaData);
                         // let otherArea =

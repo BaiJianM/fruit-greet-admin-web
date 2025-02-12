@@ -108,7 +108,7 @@
 			//          },
 			//          onSubmitInfo() {
 			//              this.axios.post('goods/galleryEdit', this.infoForm).then((response) => {
-			//                  if (response.data.errno === 0) {
+			//                  if (response.data.code === 200) {
 			//                      this.$message({
 			//                          type: 'success',
 			//                          message: '保存成功'
