@@ -21,7 +21,8 @@
 
           <el-form-item prop="code" v-if="captchaEnabled">
             <div class="login-code">
-              <el-input class="login-code-input" v-model="form.code" size="large" auto-complete="off" placeholder="验证码"/>
+              <el-input class="login-code-input" v-model="form.code" 
+              size="large" auto-complete="off" placeholder="验证码" @keyup.enter.native="startLogin"/>
               <img :src="codeUrl" @click="getCode" class="login-code-img"/>
             </div>
           </el-form-item>
