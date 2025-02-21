@@ -15,7 +15,6 @@
                 type="password"
                 v-model="form.password"
                 placeholder="密码"
-                @keyup.enter.native="startLogin"
             ></el-input>
           </el-form-item>
 
@@ -71,9 +70,6 @@ export default {
   components: {},
   methods: {
     startLogin() {
-      console.log("<<<<<<<<==================>>>>>>>>");
-      console.log(123123);
-      console.log("<<<<<<<<==================>>>>>>>>");
       this.$refs["form"].validate((valid) => {
         if (!valid) {
           return false;
@@ -133,16 +129,17 @@ export default {
                 if (goUrl == 1) {
                   this.$router.push({name: "wap"});
                 }
-              } else {
-                this.$message({
-                  type: "error",
-                  message: call.code,
-                });
-                return false;
               }
             })
             .catch((err) => {
               this.loading = false;
+              const errJson = JSON.parse(JSON.stringify(err))
+              console.log(errJson.response.data);
+              this.$message({
+                type: "error",
+                message: errJson.response.data.msg,
+              });
+              return false;
             });
       });
     },

@@ -451,7 +451,7 @@ export default {
         if (this.is_finish == 0) {
           this.on_posting = 1;
           this.axios
-            .post("order/getOrderExpress", { orderId: this.infoForm.id })
+            .post("order/getOrderExpress?orderId=" + this.infoForm.id)
             .then((response) => {
               this.expressData = response.data.data;
               this.expressData.traces = JSON.parse(this.expressData.traces);
@@ -536,7 +536,9 @@ export default {
             //
             //                        this.addressData = [];
             //                        this.getInfo();
-            this.$router.go(-1);
+            // this.$router.go(0);
+            this.getInfo()
+            this.dialogGoodsListVisible = false
           });
       } else {
         this.dialogGoodsListVisible = false;

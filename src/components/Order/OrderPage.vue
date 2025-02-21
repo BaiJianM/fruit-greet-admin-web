@@ -43,10 +43,8 @@
         </el-form>
       </div>
       <div class="form-table-box">
-        <el-checkbox-group
-            v-model="checkedCities"
-            @change="handleCheckedCitiesChange"
-        >
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange"
+                           v-loading="orderLoading" element-loading-text="正在加载订单列表">
           <div v-for="item in tableData" class="list-wrap clearfix">
             <div class="header clearfix">
               <div class="left">
@@ -1423,7 +1421,7 @@ export default {
       receiveOptions: [],
       receiver: {},
       sender: {},
-      orderListLoading: true,
+      orderLoading: false,
     };
   },
   methods: {
@@ -1674,6 +1672,7 @@ export default {
       this.getList();
     },
     getList() {
+      this.orderLoading = true;
       this.axios
           .get("order", {
             params: {
@@ -1688,7 +1687,7 @@ export default {
             this.tableData = response.data.data.records;
             this.page = response.data.data.current;
             this.total = response.data.data.total;
-            this.orderListLoading = false;
+            this.orderLoading = false;
           });
     },
     orderEdit(item) {
@@ -1976,13 +1975,11 @@ export default {
         return false;
       }
       this.axios
-          .get("order/orderPrice", {
-            params: {
-              orderId: this.order_id,
-              actualPrice: this.orderInfo.actual_price,
-              freightPrice: this.orderInfo.freight_price,
-              goodsPrice: this.orderInfo.goods_price,
-            },
+          .post("order/orderPrice", {
+            orderId: this.order_id,
+            actualPrice: this.orderInfo.actual_price,
+            freightPrice: this.orderInfo.freight_price,
+            goodsPrice: this.orderInfo.goods_price,
           })
           .then((response) => {
             this.dialogPriceVisible = false;

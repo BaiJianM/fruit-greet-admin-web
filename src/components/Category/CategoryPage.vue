@@ -129,7 +129,7 @@
                     type: 'warning'
                 }).then(() => {
 
-                    this.axios.post('category/destory', {id: row.id}).then((response) => {
+                    this.axios.post('category/destroy?id=' + row.id).then((response) => {
                         console.log(response.data)
                         if (response.data.code === 200) {
                             this.$message({

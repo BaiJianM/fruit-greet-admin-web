@@ -283,8 +283,8 @@
             <el-switch
               active-text="上架"
               inactive-text="下架"
-              active-value="1"
-              inactive-value="0"
+              active-value=true
+              inactive-value=false
               v-model="infoForm.is_on_sale"
             ></el-switch>
           </el-form-item>

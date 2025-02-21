@@ -61,7 +61,8 @@
           <el-table-column prop="sort_order" label="排序" align="center" sortable>
             <template slot-scope="scope">
               <el-input v-model="scope.row.sort_order" placeholder="排序"
-                        @blur="submitSort(scope.$index, scope.row)" style="width: 50px"></el-input>
+                        @blur="submitSort(scope.$index, scope.row)"
+                        @keyup.enter.native="submitSort(scope.$index, scope.row)" style="width: 50px"></el-input>
             </template>
           </el-table-column>
 
@@ -148,6 +149,7 @@ export default {
     },
     submitSort(index, row) {
       this.axios.post('category/updateSort', {id: row.id, sort: row.sort_order}).then((response) => {
+        this.getList()
       })
     },
     handleRowEdit(index, row) {
@@ -186,7 +188,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post('category/destory', {id: row.id}).then((response) => {
+        this.axios.post('category/destroy?id=' + row.id).then((response) => {
           console.log(response.data)
           if (response.data.code === 200) {
             this.$message({
@@ -219,6 +221,15 @@ export default {
   components: {},
   mounted() {
     this.getList();
+    if (this.$route.query.tab === 'second') {
+      this.pIndex = 1;
+      this.activeName = 'second';
+      this.getSpecList();
+    } else {
+      this.pIndex = 0;
+      this.activeName = 'first';
+      this.getList();
+    }
   }
 }
 

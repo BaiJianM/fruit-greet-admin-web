@@ -40,7 +40,7 @@
         <!--<el-button @click="expandToggle" type="primary" icon="plus" size="small">{{expand == false?'全部展开':'全部收起'}}</el-button>-->
       </div>
       <div class="form-table-box">
-        <el-table :data="tableData" style="width: 100%" stripe>
+        <el-table :data="tableData" style="width: 100%" stripe v-loading="goodsLoading" element-loading-text="正在加载商品列表">
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-table :data="props.row.product" style="width: 100%" stripe>
@@ -198,6 +198,7 @@ export default {
         name: '王小虎',
         address: '上海市普陀区金沙江路 1516 弄'
       }],
+      goodsLoading: false,
     }
   },
   methods: {
@@ -385,7 +386,15 @@ export default {
     },
     onSubmitFilter() {
       this.page = 1;
-      this.getList();
+      if (this.pIndex == 0) {
+        this.getList();
+      } else if (this.pIndex == 1) {
+        this.getOnSaleList();
+      } else if (this.pIndex == 2) {
+        this.getOutList();
+      } else if (this.pIndex == 3) {
+        this.getDropList();
+      }
     },
     clear() {
       this.axios.get('goods', {
@@ -400,6 +409,7 @@ export default {
       })
     },
     getList() {
+      this.goodsLoading = true
       this.axios.get('goods', {
         params: {
           page: this.page,
@@ -410,9 +420,11 @@ export default {
         this.tableData = response.data.data.records
         this.page = response.data.data.current
         this.total = response.data.data.total
+        this.goodsLoading = false
       })
     },
     getOnSaleList() {
+      this.goodsLoading = true
       this.axios.get('goods/onSale', {
         params: {
           page: this.page,
@@ -422,9 +434,11 @@ export default {
         this.tableData = response.data.data.records
         this.page = response.data.data.current
         this.total = response.data.data.total
+        this.goodsLoading = false
       })
     },
     getOutList() {
+      this.goodsLoading = true
       this.axios.get('goods/out', {
         params: {
           page: this.page,
@@ -434,9 +448,11 @@ export default {
         this.tableData = response.data.data.records;
         this.page = response.data.data.current;
         this.total = response.data.data.total;
+        this.goodsLoading = false
       })
     },
     getDropList() {
+      this.goodsLoading = true
       this.axios.get('goods/drop', {
         params: {
           page: this.page,
@@ -446,6 +462,7 @@ export default {
         this.tableData = response.data.data.records;
         this.page = response.data.data.current;
         this.total = response.data.data.total;
+        this.goodsLoading = false
       })
     },
     sortOrder(num) {

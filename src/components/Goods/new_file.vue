@@ -598,6 +598,7 @@
 							}
 						}
 						this.infoForm.gallery = this.gallery_list;
+            console.log("真用到了")
 						// return false;
 						this.axios.post('goods/store', {
 							info: this.infoForm,

@@ -88,7 +88,8 @@
                                     type: 'success',
                                     message: '保存成功!'
                                 });
-                                this.$router.go(-1);
+                              // 跳转到第二个页面并设置pIndex为1，确保定位到第二个tab
+                              this.$router.push({ path: '/dashboard/nature', query: { tab: 'second' } })
                             } else {
                                 this.$message({
                                     type: 'error',
