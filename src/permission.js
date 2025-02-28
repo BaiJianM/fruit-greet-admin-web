@@ -19,9 +19,6 @@ router.beforeEach(async(to, from, next) => {
 
 
   //配置接口信息
-  // Axios.defaults.baseURL = 'http://www.地址.com:8360/admin/';
-  Axios.defaults.baseURL = api.rootUrl;
-  // Axios.defaults.headers.common['X-Hioshop-Token'] = token;
   Axios.defaults.headers.common['Authorization'] = token;
   // start progress bar
   NProgress.start()

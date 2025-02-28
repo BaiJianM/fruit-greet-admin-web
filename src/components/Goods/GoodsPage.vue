@@ -40,20 +40,21 @@
         <!--<el-button @click="expandToggle" type="primary" icon="plus" size="small">{{expand == false?'全部展开':'全部收起'}}</el-button>-->
       </div>
       <div class="form-table-box">
-        <el-table :data="tableData" style="width: 100%" stripe v-loading="goodsLoading" element-loading-text="正在加载商品列表">
+        <el-table :data="tableData" style="width: 100%" stripe v-loading="goodsLoading"
+                  element-loading-text="正在加载商品列表">
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-table :data="props.row.product" style="width: 100%" stripe>
                 <el-table-column prop="id" label="id" width="60"></el-table-column>
-                <el-table-column prop="goods_sn" label="商品SKU" width="140">
+                <el-table-column prop="goodsSn" label="商品SKU" width="140">
                   <template slot-scope="scope">
                     <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini"
-                              v-model="scope.row.goods_sn" placeholder="商品SKU"></el-input>
+                              v-model="scope.row.goodsSn" placeholder="商品SKU"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="goods_aka" label="快递单上的简称" width="160">
+                <el-table-column prop="goodsAka" label="快递单上的简称" width="160">
                   <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.goods_name"
+                    <el-input size="mini" v-model="scope.row.goodsName"
                               placeholder="简称"></el-input>
                   </template>
                 </el-table-column>
@@ -67,21 +68,21 @@
                     <el-input size="mini" v-model="scope.row.cost" placeholder="成本"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="retail_price" label="零售(元)" width="90">
+                <el-table-column prop="retailPrice" label="零售(元)" width="90">
                   <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.retail_price"
+                    <el-input size="mini" v-model="scope.row.retailPrice"
                               placeholder="零售"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="goods_weight" label="重量(KG)" width="90">
+                <el-table-column prop="goodsWeight" label="重量(KG)" width="90">
                   <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.goods_weight"
+                    <el-input size="mini" v-model="scope.row.goodsWeight"
                               placeholder="重量"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="goods_number" label="库存" width="90">
+                <el-table-column prop="goodsNumber" label="库存" width="90">
                   <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.goods_number"
+                    <el-input size="mini" v-model="scope.row.goodsNumber"
                               placeholder="库存"></el-input>
                   </template>
                 </el-table-column>
@@ -95,7 +96,7 @@
                     </el-button>
                     <el-switch
                         size="mini"
-                        v-model="scope.row.is_on_sale"
+                        v-model="scope.row.isOnSale"
                         active-text=""
                         inactive-text=""
                         active-value="1"
@@ -108,27 +109,27 @@
             </template>
           </el-table-column>
           <el-table-column prop="id" label="ID" align="center"></el-table-column>
-          <el-table-column prop="list_pic_url" label="商品图片" align="center">
+          <el-table-column prop="listPicUrl" label="商品图片" align="center">
             <template slot-scope="scope">
-              <img :src="scope.row.list_pic_url" alt="" style="width: 40px;height: 40px">
+              <img :src="scope.row.listPicUrl" alt="" style="width: 40px;height: 40px">
             </template>
           </el-table-column>
           <el-table-column prop="name" label="商品名称" align="center"></el-table-column>
-          <el-table-column prop="sort_order" label="排序" align="center" sortable>
+          <el-table-column prop="sortOrder" label="排序" align="center" sortable>
             <template slot-scope="scope">
               <el-input-number class="sort-width" size="mini" :min="1" :max="100" controls-position="right"
-                               v-model="scope.row.sort_order" placeholder="排序"
+                               v-model="scope.row.sortOrder" placeholder="排序"
                                @blur="submitSort(scope.$index, scope.row)"
                                @change="submitSort(scope.$index, scope.row)"></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="sell_volume" label="销量" align="center" sortable></el-table-column>
-          <el-table-column prop="goods_number" label="库存" align="center" sortable>
+          <el-table-column prop="sellVolume" label="销量" align="center" sortable></el-table-column>
+          <el-table-column prop="goodsNumber" label="库存" align="center" sortable>
           </el-table-column>
           <el-table-column label="首页显示" align="center">
             <template slot-scope="scope">
               <el-switch
-                  v-model="scope.row.is_index"
+                  v-model="scope.row.isIndex"
                   active-text=""
                   inactive-text=""
                   @change='changeShowStatus($event,scope.row.id)'>
@@ -138,7 +139,7 @@
           <el-table-column label="上架" align="center">
             <template slot-scope="scope">
               <el-switch
-                  v-model="scope.row.is_on_sale"
+                  v-model="scope.row.isOnSale"
                   active-text=""
                   inactive-text=""
                   @change='changeStatus($event,scope.row.id)'>
@@ -165,6 +166,19 @@
 </template>
 
 <script>
+
+import {
+  CheckSku,
+  Destroy,
+  Drop,
+  GetGoods, IndexShowStatus,
+  OnSale,
+  Out, ProductStatus, SaleStatus,
+  Sort,
+  UpdatePrice,
+  UpdateShort,
+  UpdateShortName
+} from "@/api/goods";
 
 export default {
   data() {
@@ -202,80 +216,66 @@ export default {
     }
   },
   methods: {
-    stockSyc() {
-      this.$confirm('确定要同步库存?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.axios.post('crontab/updateStockByHand').then((response) => {
-          if (response.data.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '同步成功'
-            });
-            this.getOnSaleList();
-          }
-        })
-      }).catch(() => {
-
-      });
-    },
-    updateGoodsNumber() {
-      this.axios.post('goods/updateGoodsNumber').then((response) => {
-        if (response.data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '同步成功2/2，完成'
-          });
-        }
-      })
-    },
+    // stockSyc() {
+    //   this.$confirm('确定要同步库存?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     this.axios.post('crontab/updateStockByHand').then((response) => {
+    //       if (response.data.code === 200) {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '同步成功'
+    //         });
+    //         this.getOnSaleList();
+    //       }
+    //     })
+    //   }).catch(() => {
+    //
+    //   });
+    // },
+    // updateGoodsNumber() {
+    //   this.axios.post('goods/updateGoodsNumber').then((response) => {
+    //     if (response.data.code === 200) {
+    //       this.$message({
+    //         type: 'success',
+    //         message: '同步成功2/2，完成'
+    //       });
+    //     }
+    //   })
+    // },
     specSave(index, row) {
-      if (row.goods_name == '' || row.value == '' || row.cost == '' || row.retail_price == '' || row.goods_weight == '') {
+      if (row.goodsName == '' || row.value == '' || row.cost == '' || row.retailPrice == '' || row.goodsWeight == '') {
         this.$message({
           type: 'error',
           message: '值不能为空!'
         });
         return false;
       }
-      this.axios.post('goods/updatePrice', row).then((response) => {
-        if (response.data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '修改成功!'
-          });
-        } else if (response.data.errno === 100) {
-          this.$message({
-            type: 'error',
-            message: response.data.errmsg
-          });
-        }
+      this.$request.post(UpdatePrice, row).then((response) => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
       })
 
     },
     checkSkuOnly(index, row) {
       console.log(index);
       console.log(row);
-      if (row.goods_sn == '') {
+      if (row.goodsSn == '') {
         this.$message({
           type: 'error',
           message: 'SKU不能为空'
         })
         return false;
       }
-      this.axios.post('goods/checkSku', {info: row}).then((response) => {
-        if (response.data.errno === 100) {
-          this.$message({
-            type: 'error',
-            message: '该SKU已存在！'
-          })
-        } else {
-          this.$message({
-            type: 'success',
-            message: '该SKU可以用！'
-          })
-        }
+      this.$request.post(CheckSku, {info: row}).then((response) => {
+        this.$message({
+          type: 'error',
+          message: '该SKU已存在！'
+        })
       })
     },
     expandToggle() {
@@ -284,18 +284,8 @@ export default {
     test() {
       console.log(this.tableData);
     },
-    submitName(index, row) {
-      this.axios.post('goods/updateShortName', {id: row.id, short_name: row.short_name}).then((response) => {
-        if (response.data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '修改成功!'
-          });
-        }
-      })
-    },
     submitSort(index, row) {
-      this.axios.post('goods/updateSort', {id: row.id, sort: row.sort_order}).then((response) => {
+      this.$request.post(UpdateShort, {id: row.id, sort: row.sortOrder}).then((response) => {
       })
     },
     handleClick(tab, event) {
@@ -358,31 +348,24 @@ export default {
         type: 'warning'
       }).then(() => {
         let that = this;
-        that.axios.post('goods/destory', {id: row.id}).then((response) => {
-          if (response.data.code === 200) {
-            that.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-            let pIndex = localStorage.getItem('pIndex');
-            console.log(pIndex);
-            if (pIndex == 0) {
-              that.getList();
-            } else if (pIndex == 1) {
-              that.getOnSaleList();
-            } else if (pIndex == 2) {
-              that.getOutList();
-            } else if (pIndex == 3) {
-              that.getDropList();
-            }
+        that.$request.post(Destroy + "?id=" + row.id).then((response) => {
+          that.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          let pIndex = this.pIndex;
+          console.log(pIndex);
+          if (pIndex == 0) {
+            that.getList();
+          } else if (pIndex == 1) {
+            that.getOnSaleList();
+          } else if (pIndex == 2) {
+            that.getOutList();
+          } else if (pIndex == 3) {
+            that.getDropList();
           }
         })
-      }).catch(() => {
-//                    this.$message({
-//                        type: 'info',
-//                        message: '已取消删除'
-//                    });
-      });
+      })
     },
     onSubmitFilter() {
       this.page = 1;
@@ -397,71 +380,61 @@ export default {
       }
     },
     clear() {
-      this.axios.get('goods', {
-        params: {
-          page: this.page,
-          name: ''
-        }
+      this.$request.get(GetGoods, {
+        page: this.page,
+        name: ''
       }).then((response) => {
-        this.tableData = response.data.data.records
-        this.page = response.data.data.current
-        this.total = response.data.data.total
+        this.tableData = response.data.records
+        this.page = response.data.current
+        this.total = response.data.total
       })
     },
     getList() {
       this.goodsLoading = true
-      this.axios.get('goods', {
-        params: {
-          page: this.page,
-          size: this.size,
-          name: this.filterForm.name
-        }
+      this.$request.get(GetGoods, {
+        page: this.page,
+        size: this.size,
+        name: this.filterForm.name
       }).then((response) => {
-        this.tableData = response.data.data.records
-        this.page = response.data.data.current
-        this.total = response.data.data.total
+        this.tableData = response.data.records
+        this.page = response.data.current
+        this.total = response.data.total
         this.goodsLoading = false
       })
     },
     getOnSaleList() {
       this.goodsLoading = true
-      this.axios.get('goods/onSale', {
-        params: {
-          page: this.page,
-          size: this.size
-        }
+      this.$request.get(OnSale, {
+        page: this.page,
+        size: this.size
       }).then((response) => {
-        this.tableData = response.data.data.records
-        this.page = response.data.data.current
-        this.total = response.data.data.total
+        this.tableData = response.data.records
+        this.page = response.data.current
+        this.total = response.data.total
         this.goodsLoading = false
       })
     },
     getOutList() {
       this.goodsLoading = true
-      this.axios.get('goods/out', {
-        params: {
-          page: this.page,
-          size: this.size
-        }
+      this.$request.get(Out, {
+        page: this.page,
+        size: this.size
       }).then((response) => {
-        this.tableData = response.data.data.records;
-        this.page = response.data.data.current;
-        this.total = response.data.data.total;
+        this.tableData = response.data.records;
+        this.page = response.data.current;
+        this.total = response.data.total;
         this.goodsLoading = false
       })
     },
     getDropList() {
       this.goodsLoading = true
-      this.axios.get('goods/drop', {
-        params: {
-          page: this.page,
-          size: this.size
-        }
+      this.$request.get(Drop, {
+        page: this.page,
+        size: this.size
       }).then((response) => {
-        this.tableData = response.data.data.records;
-        this.page = response.data.data.current;
-        this.total = response.data.data.total;
+        this.tableData = response.data.records;
+        this.page = response.data.current;
+        this.total = response.data.total;
         this.goodsLoading = false
       })
     },
@@ -469,44 +442,36 @@ export default {
       this.num = num;
       this.pIndex = 4;
       this.activeClass = num;
-      this.axios.get('goods/sort', {
-        params: {
-          page: this.page,
-          size: this.size,
-          index: num
-        }
+      this.$request.get(Sort, {
+        page: this.page,
+        size: this.size,
+        index: num
       }).then((response) => {
-        this.tableData = response.data.data.records;
-        this.page = response.data.data.current;
-        this.total = response.data.data.total;
+        this.tableData = response.data.records;
+        this.page = response.data.current;
+        this.total = response.data.total;
       })
     },
     changeStatus($event, para) {
-      this.axios.get('goods/saleStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(SaleStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
     },
     changeProductStatus($event, para) {
-      this.axios.get('goods/productStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(ProductStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
     },
     changeShowStatus($event, para) {
-      this.axios.get('goods/indexShowStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.post(IndexShowStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })

@@ -3,28 +3,31 @@
     <div class="content-nav">
       <el-breadcrumb class="breadcrumb" separator="/">
         <el-breadcrumb-item :to="{ name: 'nature' }"
-          >商品设置</el-breadcrumb-item
+        >商品设置
+        </el-breadcrumb-item
         >
         <el-breadcrumb-item>{{
-          infoForm.id ? "编辑分类" : "添加分类"
-        }}</el-breadcrumb-item>
+            infoForm.id ? "编辑分类" : "添加分类"
+          }}
+        </el-breadcrumb-item>
       </el-breadcrumb>
       <div class="operation-nav">
         <el-button type="primary" @click="goBackPage" icon="arrow-left"
-          >返回列表</el-button
+        >返回列表
+        </el-button
         >
       </div>
     </div>
     <div class="content-main">
       <div class="form-table-box">
         <el-form
-          ref="infoForm"
-          :rules="infoRules"
-          :model="infoForm"
-          label-width="120px"
+            ref="infoForm"
+            :rules="infoRules"
+            :model="infoForm"
+            label-width="120px"
         >
           <!-- <el-form-item label="上级分类" prop="name">
-                        <el-select v-model="infoForm.parent_id" placeholder="请选择上级分类">
+                        <el-select v-model="infoForm.parentId" placeholder="请选择上级分类">
                             <el-option v-for="item in parentCategory" :key="item.id" :label="item.name"
                                        :value="item.id"></el-option>
                         </el-select>
@@ -34,35 +37,36 @@
           </el-form-item>
           <el-form-item label="简短介绍">
             <el-input
-              type="textarea"
-              v-model="infoForm.front_name"
-              :rows="1"
+                type="textarea"
+                v-model="infoForm.frontName"
+                :rows="1"
             ></el-input>
             <div class="form-tip"></div>
           </el-form-item>
           <el-form-item
-            label="分类图片"
-            prop="img_url"
-            v-if="infoForm.parent_id == 0"
+              label="分类图片"
+              prop="imgUrl"
+              v-if="infoForm.parentId == 0"
           >
             <img
-              v-if="infoForm.img_url"
-              :src="infoForm.img_url"
-              class="image-show"
+                v-if="infoForm.imgUrl"
+                :src="infoForm.imgUrl"
+                class="image-show"
             />
             <el-upload
-              class="upload-demo"
-              name="file"
-              :action="qiniuZone"
-              :on-remove="bannerRemove"
-              :before-remove="beforeBannerRemove"
-              :file-list="fileList"
-              :on-success="handleUploadBannerSuccess"
-              :data="picData"
-              :before-upload="getQiniuToken"
+                class="upload-demo"
+                name="file"
+                :action="qiniuZone"
+                :on-remove="bannerRemove"
+                :before-remove="beforeBannerRemove"
+                :file-list="fileList"
+                :on-success="handleUploadBannerSuccess"
+                :data="picData"
+                :before-upload="getQiNiuToken"
             >
-              <el-button v-if="!infoForm.img_url" size="small" type="primary"
-                >点击上传</el-button
+              <el-button v-if="!infoForm.imgUrl" size="small" type="primary"
+              >点击上传
+              </el-button
               >
             </el-upload>
             <div class="form-tip">
@@ -70,35 +74,36 @@
             </div>
           </el-form-item>
           <el-form-item
-            label="分类图片高度"
-            prop="name"
-            v-if="infoForm.parent_id == 0"
+              label="分类图片高度"
+              prop="pHeight"
+              v-if="infoForm.parentId == 0"
           >
-            <el-input v-model="infoForm.p_height"></el-input>
+            <el-input v-model="infoForm.pHeight"></el-input>
           </el-form-item>
           <el-form-item
-            label="图标"
-            prop="icon_url"
-            v-if="infoForm.parent_id == 0"
+              label="图标"
+              prop="iconUrl"
+              v-if="infoForm.parentId == 0"
           >
             <img
-              v-if="infoForm.icon_url"
-              :src="infoForm.icon_url"
-              class="image-show"
+                v-if="infoForm.iconUrl"
+                :src="infoForm.iconUrl"
+                class="image-show"
             />
             <el-upload
-              class="upload-demo"
-              name="file"
-              :action="qiniuZone"
-              :on-remove="iconRemove"
-              :before-remove="beforeIconRemove"
-              :file-list="fileList2"
-              :data="picData"
-              :on-success="handleUploadIconSuccess"
-              :before-upload="getQiniuToken"
+                class="upload-demo"
+                name="file"
+                :action="qiniuZone"
+                :on-remove="iconRemove"
+                :before-remove="beforeIconRemove"
+                :file-list="fileList2"
+                :data="picData"
+                :on-success="handleUploadIconSuccess"
+                :before-upload="getQiNiuToken"
             >
-              <el-button v-if="!infoForm.icon_url" size="small" type="primary"
-                >点击上传</el-button
+              <el-button v-if="!infoForm.iconUrl" size="small" type="primary"
+              >点击上传
+              </el-button
               >
             </el-upload>
 
@@ -108,9 +113,9 @@
           </el-form-item>
           <el-form-item label="排序">
             <el-input-number
-              v-model="infoForm.sort_order"
-              :min="1"
-              :max="1000"
+                v-model="infoForm.sortOrder"
+                :min="1"
+                :max="1000"
             ></el-input-number>
           </el-form-item>
           <el-form-item>
@@ -124,11 +129,13 @@
 </template>
 
 <script>
-import api from "@/config/api";
+import api from '@/config/api'
+import {GetQiNiuDownloadUrl, GetQiNiuToken} from '@/api/welcome'
+import {DeleteBannerImage, DeleteIconImage, Info, Store, TopCategory} from "@/api/category";
+
 export default {
   data() {
     return {
-      root: "",
       qiniuZone: "",
       fileList: [],
       fileList2: [],
@@ -141,24 +148,28 @@ export default {
       infoForm: {
         id: 0,
         name: "",
-        parent_id: 0,
-        front_name: "",
-        img_url: "",
-        sort_order: 100,
-        icon_url: "",
+        parentId: 0,
+        frontName: "",
+        imgUrl: "",
+        sortOrder: 100,
+        iconUrl: "",
+        pHeight: 0,
         // is_show: true,
       },
       infoRules: {
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-        front_name: [
-          { required: true, message: "请输入简介", trigger: "blur" },
+        name: [{required: true, message: "请输入名称", trigger: "blur"}],
+        frontName: [
+          {required: true, message: "请输入简介", trigger: "blur"},
         ],
-        img_url: [
-          { required: true, message: "请选择分类图片", trigger: "blur" },
+        imgUrl: [
+          {required: true, message: "请选择分类图片", trigger: "blur"},
         ],
-        icon_url: [
-          { required: true, message: "请选择分类图标", trigger: "blur" },
+        iconUrl: [
+          {required: true, message: "请选择分类图标", trigger: "blur"},
         ],
+        pHeight: [
+          {required: true, message: "请输入分类图片高度", trigger: "blur"},
+        ]
       },
       picData: {
         token: "",
@@ -167,10 +178,10 @@ export default {
     };
   },
   methods: {
-    getQiniuToken() {
+    getQiNiuToken() {
       let that = this;
-      this.axios.post("index/getQiniuToken").then((response) => {
-        let resInfo = response.data.data;
+      this.$request.get(GetQiNiuToken).then((response) => {
+        let resInfo = response.data;
         console.log(resInfo);
         that.picData.token = resInfo.token;
         that.url = resInfo.url;
@@ -183,51 +194,44 @@ export default {
       return this.$confirm(`确定移除图标？删除后将无法找回`);
     },
     bannerRemove(file, fileList) {
-      this.infoForm.img_url = "";
+      this.infoForm.imgUrl = "";
       let id = this.infoForm.id;
-      this.axios
-        .post("category/deleteBannerImage?id=" + id)
-        .then((response) => {
-          this.$message({
-            type: "success",
-            message: "删除成功",
+      this.$request.post(DeleteBannerImage + "?id=" + id)
+          .then((response) => {
+            this.$message({
+              type: "success",
+              message: "删除成功",
+            });
           });
-        });
     },
     iconRemove(file, fileList) {
-      this.infoForm.icon_url = "";
+      this.infoForm.iconUrl = "";
       let id = this.infoForm.id;
-      this.axios
-        .post("category/deleteIconImage?id=" + id)
-        .then((response) => {
-          this.$message({
-            type: "success",
-            message: "删除成功",
+      this.$request.post(DeleteIconImage + "?id=" + id)
+          .then((response) => {
+            this.$message({
+              type: "success",
+              message: "删除成功",
+            });
           });
-        });
     },
     goBackPage() {
       this.$router.go(-1);
     },
     onSubmitInfo() {
-      this.infoForm.level = this.infoForm.parent_id == 0 ? "L1" : "L2";
-      console.log(this.infoForm.level);
+      this.infoForm.level = this.infoForm.parentId == 0 ? "L1" : "L2";
+      this.infoForm.imgUrl = this.infoForm.imgUrl.split('?')[0];
+      this.infoForm.iconUrl = this.infoForm.iconUrl.split('?')[0];
+      this.infoForm.pHeight = Number(this.infoForm.pHeight)
       this.$refs["infoForm"].validate((valid) => {
         if (valid) {
-          this.axios.post("category/store", this.infoForm).then((response) => {
-            if (response.data.code === 200) {
-              this.$message({
-                type: "success",
-                message: "保存成功",
-              });
-              // 跳转到第一个页面并设置pIndex为0，确保定位到第一个tab
-              this.$router.push({ path: '/dashboard/nature', query: { tab: 'first' } })
-            } else {
-              this.$message({
-                type: "error",
-                message: "保存失败",
-              });
-            }
+          this.$request.post(Store, this.infoForm).then((response) => {
+            this.$message({
+              type: "success",
+              message: "保存成功",
+            });
+            // 跳转到第一个页面并设置pIndex为0，确保定位到第一个tab
+            this.$router.push({path: '/dashboard/nature', query: {tab: 'first'}})
           });
         } else {
           return false;
@@ -235,16 +239,18 @@ export default {
       });
     },
     handleUploadBannerSuccess(res, file) {
-      let url = this.url;
-      this.infoForm.img_url = url + res.key;
+      this.$request.get(GetQiNiuDownloadUrl, {key: res.key}).then((response) => {
+        this.infoForm.imgUrl = response.data
+      });
     },
     handleUploadIconSuccess(res, file) {
-      let url = this.url;
-      this.infoForm.icon_url = url + res.key;
+      this.$request.get(GetQiNiuDownloadUrl, {key: res.key}).then((response) => {
+        this.infoForm.iconUrl = response.data
+      });
     },
     getTopCategory() {
-      this.axios.get("category/topCategory").then((response) => {
-        this.parentCategory = this.parentCategory.concat(response.data.data);
+      this.$request.get(TopCategory).then((response) => {
+        this.parentCategory = this.parentCategory.concat(response.data);
       });
     },
     getInfo() {
@@ -253,36 +259,30 @@ export default {
       }
       //加载分类详情
       let that = this;
-      this.axios
-        .get("category/info", {
-          params: {
-            id: that.infoForm.id,
-          },
-        })
-        .then((response) => {
-          let resInfo = response.data.data;
-          console.log(resInfo);
-          let data = {
-            name: "分类图",
-            url: resInfo.img_url,
-          };
-          this.fileList.push(data);
-          let iconData = {
-            name: "图标",
-            url: resInfo.icon_url,
-          };
-          this.fileList2.push(iconData);
-          that.infoForm = resInfo;
-        });
+      this.$request.get(Info, {id: that.infoForm.id})
+          .then((response) => {
+            let resInfo = response.data;
+            console.log(resInfo);
+            let data = {
+              name: "分类图",
+              url: resInfo.imgUrl,
+            };
+            this.fileList.push(data);
+            let iconData = {
+              name: "图标",
+              url: resInfo.iconUrl,
+            };
+            this.fileList2.push(iconData);
+            that.infoForm = resInfo;
+          });
     },
   },
   mounted() {
     this.getTopCategory();
     this.infoForm.id = this.$route.query.id || 0;
     this.getInfo();
-    this.root = api.rootUrl;
     this.qiniuZone = api.qiniu;
-    this.getQiniuToken();
+    this.getQiNiuToken();
   },
 };
 </script>

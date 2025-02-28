@@ -13,26 +13,28 @@
     <div class="content-main">
       <div class="form-table-box">
         <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column prop="id" label="ID" width="70px"></el-table-column>
-          <el-table-column prop="imageUrl" label="广告">
+          <el-table-column prop="id" label="ID" align="center"></el-table-column>
+          <el-table-column prop="imageUrl" label="广告" align="center">
             <template slot-scope="scope">
               <img :src="scope.row.imageUrl" alt="" style="width: 90px;height: 50px">
             </template>
           </el-table-column>
-          <el-table-column prop="goodsId" label="关联商品"></el-table-column>
-          <el-table-column prop="endTime" label="结束时间"></el-table-column>
-          <el-table-column prop="sortOrder" label="排序" width="100" sortable>
+          <el-table-column prop="goodsId" label="关联商品" align="center"></el-table-column>
+          <el-table-column prop="endTime" label="结束时间" align="center"></el-table-column>
+          <el-table-column prop="sortOrder" label="排序" align="center" sortable>
             <template slot-scope="scope">
               <el-input v-model="scope.row.sortOrder" placeholder="排序"
-                        @blur="submitSort(scope.$index, scope.row)"></el-input>
+                        @blur="submitSort(scope.$index, scope.row)"
+                        @keyup.enter.native="submitSort(scope.$index, scope.row)"
+                        style="width: 50px"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="enabled" label="状态" width="80px">
+          <el-table-column prop="enabled" label="状态" align="center">
             <template slot-scope="scope">
               {{ scope.row.enabled == 1 ? '启用' : '禁用' }}
             </template>
           </el-table-column>
-          <el-table-column label="开启状态" width="80">
+          <el-table-column label="开启状态" align="center">
             <template slot-scope="scope">
               <el-switch
                   v-model="scope.row.enabled"
@@ -42,7 +44,7 @@
               </el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="170">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button size="small" @click="handleRowEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="small" type="danger" @click="handleRowDelete(scope.$index, scope.row)">删除</el-button>
@@ -61,6 +63,8 @@
 
 <script>
 
+import {Destroy, GetAd, SaleStatus, UpdateSort} from "@/api/ad";
+
 export default {
   data() {
     return {
@@ -77,15 +81,13 @@ export default {
       console.log(this.tableData);
     },
     submitSort(index, row) {
-      this.axios.post('ad/updateSort', {id: row.id, sort: row.sort_order}).then((response) => {
+      this.$request.post(UpdateSort, {id: row.id, sort: row.sortOrder}).then((response) => {
       })
     },
     changeStatus($event, para) {
-      this.axios.get('ad/saleStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(SaleStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
@@ -107,17 +109,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-
-        this.axios.post('ad/destory?id=' + row.id).then((response) => {
+        this.$request.post(Destroy + '?id=' + row.id).then((response) => {
           console.log(response.data)
-          if (response.data.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
 
-            this.getList();
-          }
+          this.getList();
         })
 
 
@@ -128,15 +127,10 @@ export default {
       this.getList()
     },
     getList() {
-      this.axios.get('ad', {
-        params: {
-          current: this.page,
-        }
-      }).then((response) => {
-        console.log('啊啊啊' + response.data.code)
-        this.tableData = response.data.data.records
-        this.page = response.data.data.current
-        this.total = response.data.data.total
+      this.$request.get(GetAd, {current: this.page}).then((response) => {
+        this.tableData = response.data.records
+        this.page = response.data.current
+        this.total = response.data.total
       })
       console.log(this.tableData);
     }

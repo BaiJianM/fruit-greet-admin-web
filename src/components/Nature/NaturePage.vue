@@ -30,7 +30,7 @@
           <el-table-column label="图标显示" align="center">
             <template slot-scope="scope">
               <el-switch
-                  v-model="scope.row.is_channel"
+                  v-model="scope.row.isChannel"
                   active-text=""
                   inactive-text=""
                   @change='changeChannelStatus($event,scope.row.id)'>
@@ -40,7 +40,7 @@
           <el-table-column label="首页显示" align="center">
             <template slot-scope="scope">
               <el-switch
-                  v-model="scope.row.is_show"
+                  v-model="scope.row.isShow"
                   active-text=""
                   inactive-text=""
                   @change='changeShowStatus($event,scope.row.id)'>
@@ -50,7 +50,7 @@
           <el-table-column label="全部产品页面显示" align="center">
             <template slot-scope="scope">
               <el-switch
-                  v-model="scope.row.is_category"
+                  v-model="scope.row.isCategory"
                   active-text=""
                   inactive-text=""
                   @change='changeCategoryStatus($event,scope.row.id)'>
@@ -58,9 +58,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="sort_order" label="排序" align="center" sortable>
+          <el-table-column prop="sortOrder" label="排序" align="center" sortable>
             <template slot-scope="scope">
-              <el-input v-model="scope.row.sort_order" placeholder="排序"
+              <el-input v-model="scope.row.sortOrder" placeholder="排序"
                         @blur="submitSort(scope.$index, scope.row)"
                         @keyup.enter.native="submitSort(scope.$index, scope.row)" style="width: 50px"></el-input>
             </template>
@@ -79,7 +79,7 @@
           </el-table-column>
           <el-table-column prop="name" label="型号名" align="center">
           </el-table-column>
-          <el-table-column prop="sort_order" label="排序" align="center">
+          <el-table-column prop="sortOrder" label="排序" align="center">
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
@@ -94,13 +94,16 @@
   </div>
 </template>
 <script>
+import {CategoryStatus, ChannelStatus, Destroy, GetCategory, ShowStatus, UpdateSort} from "@/api/category";
+import {GetSpecification} from "@/api/specification";
+
 export default {
   data() {
     return {
       activeName: 'first',
       pIndex: 0,
       categoryData: [],
-      is_spec_add: false,
+      isSpecAdd: false,
       dialogFormVisible: false,
       specData: [],
       form: {},
@@ -118,37 +121,31 @@ export default {
       }
     },
     changeShowStatus($event, para) {
-      this.axios.get('category/showStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(ShowStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
     },
     changeChannelStatus($event, para) {
-      this.axios.get('category/channelStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(ChannelStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
     },
     changeCategoryStatus($event, para) {
-      this.axios.get('category/categoryStatus', {
-        params: {
-          status: $event,
-          id: para
-        }
+      this.$request.get(CategoryStatus, {
+        status: $event,
+        id: para
       }).then((response) => {
 
       })
     },
     submitSort(index, row) {
-      this.axios.post('category/updateSort', {id: row.id, sort: row.sort_order}).then((response) => {
+      this.$request.post(UpdateSort, {id: row.id, sort: row.sortOrder}).then((response) => {
         this.getList()
       })
     },
@@ -165,7 +162,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post('specification/delete?id=' + row.id).then((response) => {
+        this.$request.post(Delete + "?id=" + row.id).then((response) => {
           console.log(response.data)
           if (response.data.code === 200) {
             this.$message({
@@ -188,33 +185,25 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post('category/destroy?id=' + row.id).then((response) => {
+        this.$request.post(Destroy + '?id=' + row.id).then((response) => {
           console.log(response.data)
-          if (response.data.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
 
-            this.getList();
-          } else {
-            this.$message({
-              type: 'error',
-              message: '删除失败，该分类有子分类!'
-            });
-
-          }
+          this.getList();
         })
       });
     },
     getList() {
-      this.axios.get('category').then((response) => {
-        this.categoryData = response.data.data
+      this.$request.get(GetCategory).then((response) => {
+        this.categoryData = response.data
       })
     },
     getSpecList() {
-      this.axios.get('specification').then((response) => {
-        this.specData = response.data.data
+      this.$request.get(GetSpecification).then((response) => {
+        this.specData = response.data
       })
     }
   },

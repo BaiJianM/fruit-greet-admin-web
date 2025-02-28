@@ -1,16 +1,16 @@
 <template>
   <div class="left-box">
     <div class="logo">
-      <img src="static/images/loading.gif" />
+      <img src="static/images/logo.png"/>
     </div>
     <div class="a" style="overflow-x: hidden; overflow-y: auto; height: 100%">
       <el-menu
-        class="sidebar"
-        :unique-opened="true"
-        :default-active="currentPagePath"
-        @open="handleOpen"
-        :router="true"
-        @close="handleClose"
+          class="sidebar"
+          :unique-opened="true"
+          :default-active="currentPagePath"
+          @open="handleOpen"
+          :router="true"
+          @close="handleClose"
       >
         <el-menu-item index="/dashboard/welcome">
           <i class="fa fa-tachometer"></i>
@@ -85,7 +85,7 @@
 export default {
   data() {
     return {
-      currentPagePath: "/dashboard",
+      currentPagePath: "/dashboard/welcome",
       loginInfo: null,
     };
   },
@@ -102,8 +102,13 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        localStorage.clear();
-        this.$router.replace({ name: "login" });
+        this.$request.post("/logout").then((res) => {
+          console.log("登出结果: " + res)
+        }).finally(() => {
+          // 不管成功或失败，都执行登出并跳转到登录页面
+          localStorage.clear();
+          this.$router.replace({ name: "login" });
+        });
       });
     },
     // checkLogin() {
@@ -121,7 +126,7 @@ export default {
     // this.checkLogin();
     if (!this.loginInfo) {
       this.loginInfo = JSON.parse(
-        window.localStorage.getItem("userInfo") || null
+          window.localStorage.getItem("userInfo") || null
       );
     }
   },
@@ -142,7 +147,7 @@ export default {
 }
 
 .left-box .sidebar {
-  width: 200px;
+  width: 201px;
   flex: 1;
   border-radius: 0;
   /*background: #233445;*/
@@ -177,11 +182,12 @@ export default {
   align-items: center;
   height: 120px;
   width: 200px;
-  border-right: solid 1px #e6e6e6;
+  border-right: solid 0px #e6e6e6;
   /*box-shadow: 0 1px 1px rgba(0, 0, 0, .5);*/
 }
 
 .left-box .logo img {
-  height: 60px;
+  height: 70px;
 }
+
 </style>

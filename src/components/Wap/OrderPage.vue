@@ -27,32 +27,32 @@
           <div class="header clearfix">
             <div class="h1">
               <div class="in1">
-                <div class="status-text">{{ item.order_status_text }}{{ item.is_fake ? '--假的订单' : '' }}
+                <div class="status-text">{{ item.orderStatusText }}{{ item.isFake ? '--假的订单' : '' }}
                 </div>
                 <div class="goods-num">共{{ item.goodsCount }}件商品</div>
               </div>
-              <div class="add-time">{{ item.add_time }}</div>
+              <div class="add-time">{{ item.addTime }}</div>
             </div>
-            <!--<div class="order-id">订单号：{{item.order_sn}}</div>-->
+            <!--<div class="order-id">订单号：{{item.orderSn}}</div>-->
             <div class="h2">
-              <div class="price-wrap">当前合计{{ item.actual_price }}元（含运费{{ item.freight_price }}元）</div>
-              <div v-if="item.change_price!= item.actual_price" class="price-change">
-                改价前{{ item.change_price }}元
+              <div class="price-wrap">当前合计{{ item.actualPrice }}元（含运费{{ item.freightPrice }}元）</div>
+              <div v-if="item.changePrice!= item.actualPrice" class="price-change">
+                改价前{{ item.changePrice }}元
               </div>
             </div>
 
           </div>
           <div class="content-wrap clearfix">
             <div class="goods-list" v-for="iitem in item.goodsList">
-              <img :src="iitem.list_pic_url" style="width: 40px;height: 40px" class="goods-img">
+              <img :src="iitem.listPicUrl" style="width: 40px;height: 40px" class="goods-img">
               <div class="content">
                 <div class="c1">
-                  <div class="goods-name">{{ iitem.goods_name }}</div>
-                  <div class="goods-spec">{{ iitem.goods_specifition_name_value }}</div>
+                  <div class="goods-name">{{ iitem.goodsName }}</div>
+                  <div class="goods-spec">{{ iitem.goodsSpecifitionNameValue }}</div>
                 </div>
                 <div class="c2">
                   <div class="goods-number">数量：{{ iitem.number }}</div>
-                  <div class="goods-number">¥{{ iitem.retail_price }}</div>
+                  <div class="goods-number">¥{{ iitem.retailPrice }}</div>
                 </div>
               </div>
             </div>
@@ -68,15 +68,15 @@
                 <div class="user-name">{{ item.consignee }} {{ item.mobile }}</div>
               </div>
               <div class="m2">
-                <div class="user-address">{{ item.full_region }}{{ item.address }}</div>
+                <div class="user-address">{{ item.fullRegion }}{{ item.address }}</div>
                 <div class="user-post">{{ item.postscript }}</div>
               </div>
 
             </div>
             <div class="right">
-              <el-button round plain v-if="item.button_text !='查看详情'" size="small" type="danger"
-                         @click="orderEdit(item.order_sn,item.button_text)">
-                {{ item.button_text }}
+              <el-button round plain v-if="item.buttonText !='查看详情'" size="small" type="danger"
+                         @click="orderEdit(item.orderSn,item.buttonText)">
+                {{ item.buttonText }}
               </el-button>
             </div>
           </div>
@@ -103,9 +103,9 @@
         <div class="dialog-wrap">
           <div class="d-list-wrap">
             <div class="d-goods-list" v-for="ditem in orderInfo.goodsList">
-              <img :src="ditem.list_pic_url" style="width: 40px;height: 40px;margin-right: 8px;" class="d-goods-img">
-              <div class="goods-name">{{ ditem.goods_name }}</div>
-              <div class="goods-spec">【{{ ditem.goods_specifition_name_value }}】</div>
+              <img :src="ditem.listPicUrl" style="width: 40px;height: 40px;margin-right: 8px;" class="d-goods-img">
+              <div class="goods-name">{{ ditem.goodsName }}</div>
+              <div class="goods-spec">【{{ ditem.goodsSpecifitionNameValue }}】</div>
               <div class="goods-number">× {{ ditem.number }}</div>
             </div>
           </div>
@@ -114,7 +114,7 @@
               <div class="user-name">{{ orderInfo.consignee }}</div>
               <div class="user-mobile">{{ orderInfo.mobile }}</div>
             </div>
-            <div class="user-address">{{ orderInfo.full_region }}{{ orderInfo.address }}</div>
+            <div class="user-address">{{ orderInfo.fullRegion }}{{ orderInfo.address }}</div>
             <div class="user-post">{{ orderInfo.postscript }}</div>
           </div>
         </div>
@@ -138,7 +138,7 @@
         </el-form-item>
 
         <el-form-item class="d-haha" label="快递单号" v-if="isShow">
-          <el-input v-model="dform.logistic_code"></el-input>
+          <el-input v-model="dform.logisticCode"></el-input>
         </el-form-item>
       </el-form>
 
@@ -150,13 +150,13 @@
     <el-dialog title="修改价格" :visible.sync="dialogPriceVisible" width="90%">
       <el-form :model="orderInfo">
         <el-form-item label="改价前总价:">
-          <h2>¥{{ orderInfo.change_price }}</h2>
+          <h2>¥{{ orderInfo.changePrice }}</h2>
         </el-form-item>
         <el-form-item label="货款总价:">
-          <el-input v-model="orderInfo.goods_price" auto-complete="off" placeholder="请输入修改后的价格"></el-input>
+          <el-input v-model="orderInfo.goodsPrice" auto-complete="off" placeholder="请输入修改后的价格"></el-input>
         </el-form-item>
         <el-form-item label="快递费用:">
-          <el-input v-model="orderInfo.freight_price" auto-complete="off"
+          <el-input v-model="orderInfo.freightPrice" auto-complete="off"
                     placeholder="请输入修改后的快递价格"></el-input>
         </el-form-item>
       </el-form>
@@ -169,6 +169,8 @@
 </template>
 <script>
 import api from '@/config/api';
+import {Detail, GetOrder, OrderDelivery, OrderPack} from "@/api/order";
+import {Delivery} from "@/api/shipper";
 
 export default {
   data() {
@@ -178,7 +180,7 @@ export default {
       filterForm: {
         name: ''
       },
-      order_status: 201,
+      orderStatus: 201,
       tableData: [],
       activeName: 'first',
       pIndex: 0,
@@ -186,7 +188,7 @@ export default {
       activeClass: 0,
       copyBtn: '',
       copyText: '',
-      order_sn: 0,
+      orderSn: 0,
       dialogVisible: false,
       dialogFormVisible: false,
       dialogPriceVisible: false,
@@ -208,12 +210,10 @@ export default {
       }
     },
     priceChangeConfirm() {
-      this.axios.get('order/orderPrice', {
-        params: {
-          orderSn: this.order_sn,
-          goodsPrice: this.orderInfo.goods_price,
-          kdPrice: this.orderInfo.freight_price,
-        }
+      this.$request.get(OrderPrice, {
+        orderSn: this.orderSn,
+        goodsPrice: this.orderInfo.goodsPrice,
+        kdPrice: this.orderInfo.freightPrice,
       }).then((response) => {
         this.dialogPriceVisible = false;
         this.getList();
@@ -221,18 +221,14 @@ export default {
 
     },
     getOrderInfo(sn) {
-      this.axios.get('order/detail', {
-        params: {
-          orderSn: this.order_sn,
-        }
-      }).then((response) => {
-        this.orderInfo = response.data.data;
+      this.$request.get(Detail, {orderSn: this.orderSn}).then((response) => {
+        this.orderInfo = response.data;
         // console.log(this.orderInfo);
       })
     },
     // copyit(item) {
     //   console.log(item);
-    //   let val = item.consignee + '|' + item.mobile + '|' + item.full_region + item.address + item.postscript;
+    //   let val = item.consignee + '|' + item.mobile + '|' + item.fullRegion + item.address + item.postscript;
     //   this.copyText = val;
     //   let classo = "c" + item.id;
     //   console.log(classo);
@@ -264,58 +260,52 @@ export default {
     handleClick(tab, event) {
       let pindex = tab._data.index;
       if (pindex == 0) {
-        this.order_status = 201
+        this.orderStatus = 201
       } else if (pindex == 1) {
-        this.order_status = 300
+        this.orderStatus = 300
       } else if (pindex == 2) {
-        this.order_status = '101'
+        this.orderStatus = '101'
       }
       this.getList();
     },
     orderEdit(sn, para) {
-      this.order_sn = sn;
-      // console.log(this.order_sn);
+      this.orderSn = sn;
+      // console.log(this.orderSn);
       if (para == '备货') {
         // console.log(para);
         this.dialogVisible = true;
       } else if (para == '发货') {
         this.deliveryCom.id = 0;
-        this.dform.logistic_code = '';
-        this.getOrderInfo(this.order_sn);
+        this.dform.logisticCode = '';
+        this.getOrderInfo(this.orderSn);
         this.dialogFormVisible = true;
       } else if (para == '修改价格') {
-        this.getOrderInfo(this.order_sn);
+        this.getOrderInfo(this.orderSn);
         this.dialogPriceVisible = true;
       }
     },
     getDeliveyInfo() {
-      this.axios.get('shipper/delivery').then((response) => {
-        this.deliveryCom = response.data.data;
+      this.$request.get(Delivery).then((response) => {
+        this.deliveryCom = response.data;
         // console.log(this.deliveryCom);
       })
     },
     confirm() {
-      this.axios.get('order/orderpack', {
-        params: {
-          orderSn: this.order_sn,
-        }
-      }).then((response) => {
+      this.$request.get(OrderPack, {orderSn: this.orderSn}).then((response) => {
         this.dialogVisible = false;
         this.getList();
       })
     },
     deliveyGoConfirm() {
       let method = this.method;
-      // console.log(this.order_sn);
+      // console.log(this.orderSn);
       // console.log(this.nowDeliveryId);
       // console.log(this.dform.method);
-      this.axios.get('order/orderDelivery', {
-        params: {
-          orderSn: this.order_sn,
-          shipper: this.nowDeliveryId,
-          method: this.dform.method,
-          logistic_code: this.dform.logistic_code
-        }
+      this.$request.get(OrderDelivery, {
+        orderSn: this.orderSn,
+        shipper: this.nowDeliveryId,
+        method: this.dform.method,
+        logisticCode: this.dform.logisticCode
       }).then((response) => {
         this.dialogFormVisible = false;
         this.getList();
@@ -324,26 +314,25 @@ export default {
       this.dialogFormVisible = false;
     },
     getList() {
-      // console.log(this.order_status);
-      this.axios.get('order', {
+      // console.log(this.orderStatus);
+      this.$request.get(GetOrder, {
         params: {
           page: this.page,
-          orderSn: this.filterForm.order_sn,
+          orderSn: this.filterForm.orderSn,
           consignee: this.filterForm.consignee,
-          status: this.order_status,
+          status: this.orderStatus,
         }
       }).then((response) => {
         console.log(88888);
-        this.tableData = response.data.data.records;
-        this.page = response.data.data.current;
-        this.total = response.data.data.total;
+        this.tableData = response.data.records;
+        this.page = response.data.current;
+        this.total = response.data.total;
       })
     },
   },
   mounted() {
     this.getList();
     this.getDeliveyInfo();
-    this.root = api.rootUrl;
   }
 }
 </script>

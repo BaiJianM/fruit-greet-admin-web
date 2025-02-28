@@ -6,7 +6,7 @@
       </el-breadcrumb>
     </div>
     <div class="content-main">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activename" @tab-click="handleClick">
         <el-tab-pane label="待付款" name="first"></el-tab-pane>
         <el-tab-pane label="待发货" name="second"></el-tab-pane>
         <el-tab-pane label="待收货" name="third"></el-tab-pane>
@@ -19,7 +19,7 @@
           <el-form-item label="订单号">
             <el-input
                 class="filter-input"
-                v-model="filterForm.order_sn"
+                v-model="filterForm.orderSn"
                 placeholder="请输入订单号"
             ></el-input>
           </el-form-item>
@@ -33,7 +33,7 @@
           <el-form-item label="快递号">
             <el-input
                 class="filter-input"
-                v-model="filterForm.logistic_code"
+                v-model="filterForm.logisticCode"
                 placeholder="请输入快递单号"
             ></el-input>
           </el-form-item>
@@ -48,25 +48,25 @@
           <div v-for="item in tableData" class="list-wrap clearfix">
             <div class="header clearfix">
               <div class="left">
-                <div class="off-text" v-if="item.offline_pay">线下支付订单</div>
-                <div class="status-text">{{ item.order_status_text }}</div>
-                <div class="add-time">下单时间：{{ item.add_time }}</div>
-                <div class="pay-time" v-if="item.pay_time != 0">
-                  付款时间：{{ item.pay_time }}
+                <div class="off-text" v-if="item.offlinePay">线下支付订单</div>
+                <div class="status-text">{{ item.orderStatusText }}</div>
+                <div class="add-time">下单时间：{{ item.addTime }}</div>
+                <div class="pay-time" v-if="item.payTime != 0">
+                  付款时间：{{ item.payTime }}
                 </div>
-                <div class="order-id">订单号：{{ item.order_sn }}</div>
+                <div class="order-id">订单号：{{ item.orderSn }}</div>
               </div>
               <div class="right">
                 <div class="goods-num">共{{ item.goodsCount }}件商品</div>
                 <div
-                    v-if="item.change_price != item.actual_price"
+                    v-if="item.changePrice != item.actualPrice"
                     class="price-change"
                 >
-                  改价前{{ item.change_price }}元
+                  改价前{{ item.changePrice }}元
                 </div>
                 <div class="price-wrap">
-                  当前合计{{ item.actual_price }}元（含运费{{
-                    item.freight_price
+                  当前合计{{ item.actualPrice }}元（含运费{{
+                    item.freightPrice
                   }}元）
                 </div>
               </div>
@@ -74,8 +74,8 @@
             <div class="content-wrap clearfix">
               <div class="left">
                 <div class="goods-list" v-for="iitem in item.goodsList">
-                  <img :src="iitem.list_pic_url" class="goods-img"/>
-                  <div class="goods-name">{{ iitem.goods_aka }}</div>
+                  <img :src="iitem.listPicUrl" class="goods-img"/>
+                  <div class="goods-name">{{ iitem.goodsAka }}</div>
                   <div class="goods-number">
                     <label>数量：</label>{{ iitem.number }}
                   </div>
@@ -98,7 +98,7 @@
                   <div class="user-mobile">{{ item.mobile }}</div>
                 </div>
                 <div class="user-address">
-                  {{ item.full_region }}{{ item.address }}
+                  {{ item.fullRegion }}{{ item.address }}
                 </div>
                 <div v-if="item.postscript != ''" class="user-post">
                   留言：{{ item.postscript }}
@@ -106,14 +106,14 @@
                 <el-input
                     class="admin-memo"
                     type="textarea"
-                    @blur="changeMemo(item.id, item.admin_memo)"
-                    v-model="item.admin_memo"
+                    @blur="changeMemo(item.id, item.adminMemo)"
+                    v-model="item.adminMemo"
                     placeholder="备注"
                 ></el-input>
               </div>
               <div class="right">
                 <el-button
-                    v-if="item.print_status == 1 && item.order_status == 300"
+                    v-if="item.printStatus == 1 && item.orderStatus == 300"
                     class="d-btn"
                     type="primary"
                     @click="deliveryConfirm(item.id)"
@@ -121,14 +121,14 @@
                 >发货
                 </el-button>
                 <el-button
-                    v-if="item.order_status == 101"
+                    v-if="item.orderStatus == 101"
                     size="mini"
                     @click="orderEdit(item)"
                 >修改价格
                 </el-button>
                 <el-button
                     v-else-if="
-                    item.order_status == 300 || item.order_status == 301
+                    item.orderStatus == 300 || item.orderStatus == 301
                   "
                     size="mini"
                     @click="orderEdit(item)"
@@ -178,11 +178,11 @@
         <div class="dialog-wrap">
           <div class="list-wrap">
             <div class="goods-list" v-for="ditem in orderInfo.goodsList">
-              <img :src="ditem.list_pic_url" class="goods-img"/>
-              <div class="goods-name">{{ ditem.goods_name }}</div>
-              <div class="goods-name">{{ ditem.goods_aka }}</div>
+              <img :src="ditem.listPicUrl" class="goods-img"/>
+              <div class="goods-name">{{ ditem.goodsname }}</div>
+              <div class="goods-name">{{ ditem.goodsAka }}</div>
               <div class="goods-spec">
-                {{ ditem.goods_specifition_name_value }}
+                {{ ditem.goodsSpecifitionnameValue }}
               </div>
               <div class="goods-number">
                 <label>数量：</label>{{ ditem.number }}
@@ -277,10 +277,10 @@
             买家留言：{{ orderInfo.postscript }}
           </div>
           <div
-              v-if="orderInfo.admin_memo != '' && orderInfo.admin_memo != null"
+              v-if="orderInfo.adminMemo != '' && orderInfo.adminMemo != null"
               class="user-admin-t"
           >
-            备注：{{ orderInfo.admin_memo }}
+            备注：{{ orderInfo.adminMemo }}
           </div>
         </div>
         <el-form-item label="类型" style="margin-top: 10px">
@@ -305,7 +305,7 @@
           <el-input-number
               :mini="1"
               :max="9999"
-              v-model="orderInfo.express_value"
+              v-model="orderInfo.expressValue"
               @change="changeExpressValue(orderInfo)"
               @blur="changeExpressValue(orderInfo)"
               placeholder="请输入保价金额"
@@ -329,13 +329,13 @@
         >
           <el-input
               type="textarea"
-              v-model="orderInfo.print_info"
+              v-model="orderInfo.printInfo"
               @blur="changeInfo(orderInfo)"
               placeholder="请输入发货信息"
           ></el-input>
         </el-form-item>
         <el-form-item label="快递单号" v-if="dform.method == 2">
-          <el-input v-model="dform.logistic_code"></el-input>
+          <el-input v-model="dform.logisticCode"></el-input>
         </el-form-item>
         <el-form-item label="选择快递" v-if="dform.method == 2">
           <el-select
@@ -356,7 +356,7 @@
       <div slot="footer" class="dialog-footer print-footer">
         <div class="f-left">
           <el-checkbox
-              v-if="dform.method == 1 && orderInfo.order_status == 300"
+              v-if="dform.method == 1 && orderInfo.orderStatus == 300"
               v-model="autoGoDelivery"
           >打印完成后自动发货
           </el-checkbox>
@@ -460,7 +460,7 @@
             "
           >
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="40"
                 display-value="false"
                 tag="img"
@@ -474,7 +474,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
           <div style="font-size: 16px; font-weight: bold">
@@ -490,7 +490,7 @@
           "
         >
           <div style="text-align: center; font-size: 32px; font-weight: bold">
-            {{ sfHasValue.DestinatioCode }}
+            {{ sfHasValue.destinatioCode }}
           </div>
         </div>
         <div
@@ -521,14 +521,14 @@
                 font-size: 12px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 12px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -561,14 +561,14 @@
                 font-size: 10px;
               "
             >
-              {{ senderInfo.Name }} {{ senderInfo.Tel }}
+              {{ senderInfo.name }} {{ senderInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
@@ -629,8 +629,8 @@
             border-bottom: 1px solid #333;
           "
         >
-          寄件时间:{{ sfHasValue.send_time }},账号:{{
-            sfHasValue.month_code
+          寄件时间:{{ sfHasValue.sendTime }},账号:{{
+            sfHasValue.monthCode
           }},<label v-if="sfHasValue.expressValue > 0"
         >保价:{{ sfHasValue.expressValue }}元</label
         >
@@ -638,7 +638,7 @@
         <div style="display: flex; width: 100%; border-bottom: 1px solid #333">
           <div style="width: 100%; text-align: center">
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="30"
                 display-value="false"
                 tag="img"
@@ -652,7 +652,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
         </div>
@@ -684,14 +684,14 @@
                 font-size: 10px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -724,20 +724,20 @@
                 font-size: 10px;
               "
             >
-              {{ senderInfo.Name }} {{ senderInfo.Tel }}
+              {{ senderInfo.name }} {{ senderInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
         </div>
         <div style="height: 80px; font-size: 10px">
-          {{ orderInfo.print_info }}
+          {{ orderInfo.printInfo }}
         </div>
       </div>
       <div
@@ -756,7 +756,7 @@
         <div style="display: flex; width: 100%; border-bottom: 1px solid #333">
           <div style="width: 100%; text-align: center">
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="40"
                 display-value="false"
                 tag="img"
@@ -770,7 +770,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
         </div>
@@ -783,7 +783,7 @@
           "
         >
           <div style="text-align: center; font-size: 32px; font-weight: bold">
-            {{ sfHasValue.DestinatioCode }}
+            {{ sfHasValue.destinatioCode }}
           </div>
         </div>
         <div
@@ -814,14 +814,14 @@
                 font-size: 12px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 12px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -854,14 +854,14 @@
                 font-size: 10px;
               "
             >
-              {{ senderInfo.Name }} {{ senderInfo.Tel }}
+              {{ senderInfo.name }} {{ senderInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
@@ -922,8 +922,8 @@
             border-bottom: 1px solid #333;
           "
         >
-          寄件时间:{{ sfHasValue.send_time }},账号:{{
-            sfHasValue.month_code
+          寄件时间:{{ sfHasValue.sendTime }},账号:{{
+            sfHasValue.monthCode
           }},<label v-if="sfHasValue.expressValue > 0"
         >保价:{{ sfHasValue.expressValue }}元</label
         >
@@ -931,7 +931,7 @@
         <div style="display: flex; width: 100%; border-bottom: 1px solid #333">
           <div style="width: 100%; text-align: center">
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="30"
                 display-value="false"
                 tag="img"
@@ -945,7 +945,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
         </div>
@@ -977,14 +977,14 @@
                 font-size: 10px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -1017,20 +1017,20 @@
                 font-size: 10px;
               "
             >
-              {{ senderInfo.Name }} {{ senderInfo.Tel }}
+              {{ senderInfo.name }} {{ senderInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
         </div>
         <div style="height: 80px; font-size: 10px">
-          {{ orderInfo.print_info }}
+          {{ orderInfo.printInfo }}
         </div>
       </div>
       <div
@@ -1049,7 +1049,7 @@
         <div style="display: flex; width: 100%; border-bottom: 1px solid #333">
           <div style="width: 100%; text-align: center">
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="50"
                 display-value="false"
                 tag="img"
@@ -1063,7 +1063,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
         </div>
@@ -1107,14 +1107,14 @@
                 font-size: 12px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 12px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -1147,14 +1147,14 @@
                 font-size: 12px;
               "
             >
-              {{ senderInfo.Name }}{{ senderInfo.Tel }}
+              {{ senderInfo.name }}{{ senderInfo.tel }}
             </div>
             <div style="font-size: 12px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
@@ -1177,7 +1177,7 @@
         <div
             style="width: 100%; text-align: center; height: 30px; font-size: 10px"
         >
-          寄件时间：{{ sfHasValue.send_time }}
+          寄件时间：{{ sfHasValue.sendTime }}
         </div>
 
         <div
@@ -1186,7 +1186,7 @@
         <div style="display: flex; width: 100%; border-bottom: 1px solid #333">
           <div style="width: 100%; text-align: center">
             <barcode
-                :value="sfHasValue.LogisticCode"
+                :value="sfHasValue.logisticCode"
                 height="30"
                 display-value="false"
                 tag="img"
@@ -1200,7 +1200,7 @@
                 padding-bottom: 2px;
               "
             >
-              快递单号:{{ sfHasValue.LogisticCode }}
+              快递单号:{{ sfHasValue.logisticCode }}
             </div>
           </div>
         </div>
@@ -1232,14 +1232,14 @@
                 font-size: 10px;
               "
             >
-              {{ receiverInfo.Name }} {{ receiverInfo.Tel }}
+              {{ receiverInfo.name }} {{ receiverInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                receiverInfo.ProvinceName +
-                receiverInfo.CityName +
-                receiverInfo.ExpAreaName +
-                receiverInfo.Address
+                receiverInfo.provinceName +
+                receiverInfo.cityName +
+                receiverInfo.expAreaName +
+                receiverInfo.address
               }}
             </div>
           </div>
@@ -1272,20 +1272,20 @@
                 font-size: 10px;
               "
             >
-              {{ senderInfo.Name }}{{ senderInfo.Tel }}
+              {{ senderInfo.name }}{{ senderInfo.tel }}
             </div>
             <div style="font-size: 10px">
               {{
-                senderInfo.ProvinceName +
-                senderInfo.CityName +
-                senderInfo.ExpAreaName +
-                senderInfo.Address
+                senderInfo.provinceName +
+                senderInfo.cityName +
+                senderInfo.expAreaName +
+                senderInfo.address
               }}
             </div>
           </div>
         </div>
         <div style="height: 80px; font-size: 10px">
-          {{ orderInfo.print_info }}
+          {{ orderInfo.printInfo }}
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -1309,7 +1309,7 @@
     <el-dialog title="修改价格" :visible.sync="dialogPriceVisible">
       <el-form :model="orderInfo">
         <el-form-item label="改价前总价:">
-          <h2>¥{{ orderInfo.change_price }}</h2>
+          <h2>¥{{ orderInfo.changePrice }}</h2>
         </el-form-item>
 
         <el-form-item label="修改商品价格:">
@@ -1317,7 +1317,7 @@
               @change="goodsPriceChange"
               :min="0"
               :max="99999999"
-              v-model="orderInfo.goods_price"
+              v-model="orderInfo.goodsPrice"
               auto-complete="off"
               placeholder="请输入商品价格"
           ></el-input-number>
@@ -1327,25 +1327,25 @@
               @change="freightPriceChange"
               :min="0"
               :max="99999999"
-              v-model="orderInfo.freight_price"
+              v-model="orderInfo.freightPrice"
               auto-complete="off"
               placeholder="请输入修改后的快递"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="改价后总价:">
-          <h2>¥{{ orderInfo.actual_price }}</h2>
+          <h2>¥{{ orderInfo.actualPrice }}</h2>
         </el-form-item>
         <el-form-item label="">
           {{
-            orderInfo.change_price - orderInfo.actual_price > 0
+            orderInfo.changePrice - orderInfo.actualPrice > 0
                 ? "优惠金额：" +
-                (orderInfo.change_price - orderInfo.actual_price).toFixed(2)
+                (orderInfo.changePrice - orderInfo.actualPrice).toFixed(2)
                 : "涨价金额：" +
-                (orderInfo.actual_price - orderInfo.change_price).toFixed(2)
+                (orderInfo.actualPrice - orderInfo.changePrice).toFixed(2)
           }}
         </el-form-item>
         <!-- <el-form-item label="快递费用:">
-                    <el-input v-model="orderInfo.freight_price" auto-complete="off" placeholder="请输入修改后的快递价格"></el-input>
+                    <el-input v-model="orderInfo.freightPrice" auto-complete="off" placeholder="请输入修改后的快递价格"></el-input>
                 </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -1359,6 +1359,18 @@
 <script>
 import VueBarcode from "../../../node_modules/vue-barcode";
 import ElButton from "../../../node_modules/element-ui/packages/button/src/button.vue";
+import {
+  CheckExpress,
+  Destroy, Detail, DirectPrintExpress,
+  GetAllRegion, GetAutoStatus, GetMianExpress, GetOrder, GoDelivery, GoPrintOnly,
+  OrderDelivery,
+  OrderPack, OrderPrice, OrderReceive, RePrintExpress,
+  SaveAdminMemo,
+  SaveExpressValueInfo,
+  SavePrintInfo,
+  SaveRemarkInfo
+} from "@/api/order";
+import {Delivery} from "@/api/shipper";
 // Vue.component(VueBarcode.name, VueBarcode);
 
 // import { Button } from 'element-ui';
@@ -1382,19 +1394,19 @@ export default {
       total: 0,
       filterForm: {
         name: "",
-        logistic_code: "",
+        logisticCode: "",
       },
       tableData: [],
-      activeName: "second",
-      order_status: 300,
+      activename: "second",
+      orderStatus: 300,
       dialogVisible: false,
       dialogVisible2: false,
       dialogFormVisible: false,
       dialogPriceVisible: false,
       dialogText: "",
       dialogIndex: 0,
-      order_sn: 0,
-      order_id: 0,
+      orderSn: 0,
+      orderId: 0,
       dform: {
         method: 2,
       },
@@ -1403,7 +1415,7 @@ export default {
       deliveryCom: [],
       nowDeliveryId: "",
       formLabelWidth: "120px",
-      barcode_option: {
+      barcodeOption: {
         displayValue: false, //是否默认显示条形码数据
         background: "#fff", //条形码背景颜色
         width: 2,
@@ -1432,28 +1444,28 @@ export default {
     },
     goodsPriceChange(value) {
       console.log(value);
-      this.orderInfo.goods_price = value;
-      this.orderInfo.actual_price =
-          Number(this.orderInfo.goods_price) +
-          Number(this.orderInfo.freight_price);
+      this.orderInfo.goodsPrice = value;
+      this.orderInfo.actualPrice =
+          Number(this.orderInfo.goodsPrice) +
+          Number(this.orderInfo.freightPrice);
     },
     freightPriceChange(value) {
-      this.orderInfo.freight_price = value;
-      this.orderInfo.actual_price =
-          Number(this.orderInfo.goods_price) + Number(value);
+      this.orderInfo.freightPrice = value;
+      this.orderInfo.actualPrice =
+          Number(this.orderInfo.goodsPrice) + Number(value);
     },
     getAllRegion() {
       let that = this;
-      this.axios.get("order/getAllRegion").then((response) => {
-        this.options = response.data.data;
+      this.$request.get(GetAllRegion).then((response) => {
+        this.options = response.data;
       });
     },
     deliveryGoGo() {
-      console.log(this.order_id);
+      console.log(this.orderId);
       console.log(this.nowDeliveryId);
       console.log(this.dform);
       if (this.dform.method == 2) {
-        if (this.dform.logistic_code == undefined || this.nowDeliveryId == "") {
+        if (this.dform.logisticCode == undefined || this.nowDeliveryId == "") {
           this.$message({
             type: "error",
             message: "请输入快递单号和快递公司",
@@ -1461,121 +1473,76 @@ export default {
           return false;
         }
       }
-      this.axios
-          .get("order/orderDelivery", {
-            params: {
-              orderId: this.order_id,
-              shipper: this.nowDeliveryId,
-              method: this.dform.method,
-              logistic_code: this.dform.logistic_code,
-            },
-          })
-          .then((response) => {
-            this.dialogFormVisible = false;
-            this.dialogExpressVisible = false;
-            this.getList();
-          });
+      this.$request.get(OrderDelivery, {
+        orderId: this.orderId,
+        shipper: this.nowDeliveryId,
+        method: this.dform.method,
+        logisticCode: this.dform.logisticCode,
+      }).then((response) => {
+        this.dialogFormVisible = false;
+        this.dialogExpressVisible = false;
+        this.getList();
+      });
     },
     getDeliveyInfo() {
-      this.axios.get("shipper/delivery").then((response) => {
-        this.deliveryCom = response.data.data;
+      this.$request.get(Delivery).then((response) => {
+        this.deliveryCom = response.data;
       });
     },
     changeExpressValue(info) {
       if (this.expressType == 1) {
-        this.axios
-            .post("order/saveExpressValueInfo", {
-              express_value: info.express_value,
-              id: info.id,
-            })
-            .then((response) => {
-              if (response.data.code === 200) {
-                this.$message({
-                  type: "success",
-                  message: "保存成功!",
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: "保存失败",
-                });
-              }
-            });
+        this.$request.post(SaveExpressValueInfo, {
+          expressValue: info.expressValue,
+          id: info.id,
+        }).then((response) => {
+          this.$message({
+            type: "success",
+            message: "保存成功!",
+          });
+        });
       }
     },
     confirm() {
-      this.axios
-          .get("order/orderpack", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
+      this.$request.get(OrderPack, {orderId: this.orderId})
           .then((response) => {
             this.dialogVisible = false;
             this.getList();
           });
     },
     changeRemarkInfo(info) {
-      this.axios
-          .post("order/saveRemarkInfo", {
-            remark: info.remark,
-            id: info.id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.$message({
-                type: "success",
-                message: "保存成功!",
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "保存失败",
-              });
-            }
-          });
+      this.$request.post(SaveRemarkInfo, {
+        remark: info.remark,
+        id: info.id,
+      }).then((response) => {
+        this.$message({
+          type: "success",
+          message: "保存成功!",
+        });
+      });
     },
     changeInfo(info) {
       let id = info.id;
-      let print_info = info.print_info;
-      this.axios
-          .post("order/savePrintInfo", {
-            print_info: print_info,
-            id: id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.$message({
-                type: "success",
-                message: "保存成功!",
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "保存失败",
-              });
-            }
-          });
+      let printInfo = info.printInfo;
+      this.$request.post(SavePrintInfo, {
+        printInfo: printInfo,
+        id: id,
+      }).then((response) => {
+        this.$message({
+          type: "success",
+          message: "保存成功!",
+        });
+      });
     },
     changeMemo(id, text) {
-      this.axios
-          .post("order/saveAdminMemo", {
-            text: text,
-            id: id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.$message({
-                type: "success",
-                message: "保存成功!",
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "保存失败",
-              });
-            }
-          });
+      this.$request.post(SaveAdminMemo, {
+        text: text,
+        id: id,
+      }).then((response) => {
+        this.$message({
+          type: "success",
+          message: "保存成功!",
+        });
+      });
     },
     cancelPrint() {
       this.printMiandan = false;
@@ -1585,13 +1552,12 @@ export default {
       console.log("哈哈");
     },
     onPrintNum() {
-      this.axios
-          .post(this.testApi, this.testData, {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-            },
-          })
+      this.$request.post(this.testApi, this.testData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      })
           .then((response) => {
             console.log(response.data);
           });
@@ -1600,24 +1566,24 @@ export default {
       this.$router.push({
         name: "order_detail",
         query: {
-          id: index,
+          orderId: index,
         },
       });
     },
     handleClick(tab, event) {
       let pindex = tab._data.index;
       if (pindex == 0) {
-        this.order_status = "101,801";
+        this.orderStatus = "101,801";
       } else if (pindex == 1) {
-        this.order_status = 300;
+        this.orderStatus = 300;
       } else if (pindex == 2) {
-        this.order_status = 301;
+        this.orderStatus = 301;
       } else if (pindex == 3) {
-        this.order_status = 401;
+        this.orderStatus = 401;
       } else if (pindex == 4) {
-        this.order_status = "102,103";
+        this.orderStatus = "102,103";
       } else if (pindex == 5) {
-        this.order_status = "101,102,103,202,203,300,301,302,303,401,801,802";
+        this.orderStatus = "101,102,103,202,203,300,301,302,303,401,801,802";
       }
       this.getList();
     },
@@ -1639,115 +1605,96 @@ export default {
     },
     handleRowEdit(index, row) {
       this.$router.push({
-        name: "order_detail",
+        name: "orderDetail",
         query: {
           id: row.id,
         },
       });
     },
-    handleRowDelete(index, row) {
-      this.$confirm("确定要删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.axios
-            .post("order/destory", {
-              id: row.id,
-            })
-            .then((response) => {
-              console.log(response.data);
-              if (response.data.code === 200) {
-                this.$message({
-                  type: "success",
-                  message: "删除成功!",
-                });
-                this.getList();
-              }
-            });
-      });
-    },
+    // handleRowDelete(index, row) {
+    //   this.$confirm("确定要删除?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   }).then(() => {
+    //     this.$request.post(Destroy, {
+    //       id: row.id,
+    //     }).then((response) => {
+    //       console.log(response.data);
+    //       this.$message({
+    //         type: "success",
+    //         message: "删除成功!",
+    //       });
+    //       this.getList();
+    //     });
+    //   });
+    // },
     onSubmitFilter() {
       this.page = 1;
       this.getList();
     },
     getList() {
       this.orderLoading = true;
-      this.axios
-          .get("order", {
-            params: {
-              page: this.page,
-              orderSn: this.filterForm.order_sn,
-              consignee: this.filterForm.consignee,
-              logistic_code: this.filterForm.logistic_code,
-              status: this.order_status,
-            },
-          })
-          .then((response) => {
-            this.tableData = response.data.data.records;
-            this.page = response.data.data.current;
-            this.total = response.data.data.total;
-            this.orderLoading = false;
-          });
+      this.$request.get(GetOrder, {
+        page: this.page,
+        orderSn: this.filterForm.orderSn,
+        consignee: this.filterForm.consignee,
+        logisticCode: this.filterForm.logisticCode,
+        status: this.orderStatus,
+      }).then((response) => {
+        this.tableData = response.data.records;
+        this.page = response.data.current;
+        this.total = response.data.total;
+        this.orderLoading = false;
+      });
     },
     orderEdit(item) {
       this.rePrintStatus = 0;
       console.log(0);
-      this.order_id = item.id;
-      if (item.order_status == 300 || item.order_status == 301) {
+      this.orderId = item.id;
+      if (item.orderStatus == 300 || item.orderStatus == 301) {
         this.rePrintStatus = 0;
         this.checkExpressInfo();
         console.log(1);
-      } else if (item.order_status == 101) {
-        this.getOrderInfo(this.order_id);
+      } else if (item.orderStatus == 101) {
+        this.getOrderInfo(this.orderId);
         this.dialogPriceVisible = true;
         console.log(2);
-      } else if (item.order_status == 301 && item.is_fake == 1) {
+      } else if (item.orderStatus == 301 && item.isFake == 1) {
         this.dialogVisible2 = true;
         console.log(3);
       }
     },
     rePrintExpress() {
       this.rePrintStatus = 0;
-      this.axios
-          .get("order/rePrintExpress", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
+      this.$request.get(RePrintExpress, {orderId: this.orderId})
           .then((response) => {
-            if (response.data.code === 200) {
-              this.expressType = 0;
-              this.getOrderInfo(this.order_id);
-              this.dialogFormVisible = true;
-            }
+            this.expressType = 0;
+            this.getOrderInfo(this.orderId);
+            this.dialogFormVisible = true;
           });
     },
     directPrintExpress() {
       this.rePrintStatus = 1;
-      this.axios
-          .get("order/directPrintExpress", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              let express = response.data.data;
-              this.expressType = express.express_type;
-              let orderInfo = this.orderInfo;
-              this.sfHasValue = {
-                LogisticCode: express.logistic_code,
-                remark: orderInfo.remark,
-                DestinatioCode: express.region_code,
-                MarkDestination: express.region_code,
-                send_time: express.send_time,
-                month_code: express.month_code,
-              };
-              this.expressType = 0;
-              this.dialogFormVisible = true;
-            }
-          });
+      this.$request.get(DirectPrintExpress, {
+        params: {
+          orderId: this.orderId,
+        },
+      }).then((response) => {
+        let express = response.data;
+        this.expressType = express.express_type;
+        let orderInfo = this.orderInfo;
+        this.sfHasValue = {
+          logisticCode: express.logisticCode,
+          remark: orderInfo.remark,
+          destinatioCode: express.regionCode,
+          MarkDestination: express.regionCode,
+          sendTime: express.sendTime,
+          monthCode: express.monthCode,
+        };
+        this.expressType = 0;
+        this.dialogFormVisible = true;
+      });
     },
     directPrintConfirm() {
       let expressType = this.expressType;
@@ -1759,37 +1706,27 @@ export default {
         return false;
       }
       if (expressType == 1) {
-        this.sfHasValue.expressValue = this.orderInfo.express_value;
+        this.sfHasValue.expressValue = this.orderInfo.expressValue;
       }
       this.printMiandan = true;
       this.dialogFormVisible = false;
       this.dialogExpressVisible = false;
     },
     checkExpressInfo() {
-      this.getOrderInfo(this.order_id);
-      this.axios
-          .get("order/checkExpress", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-            if (response.data.code === 200) {
-              this.dialogExpressVisible = true;
-            } else {
-              this.expressType = 0;
-              this.dialogFormVisible = true;
-            }
-          });
+      this.getOrderInfo(this.orderId);
+      this.$request.get(CheckExpress, {orderId: this.orderId}).then((response) => {
+        console.log(response.data);
+        // TODO 这里记一下需要验证经过拦截器后还能不能判断200
+        if (response.data.code === 200) {
+          this.dialogExpressVisible = true;
+        } else {
+          this.expressType = 0;
+          this.dialogFormVisible = true;
+        }
+      });
     },
     receiveConfirm() {
-      this.axios
-          .get("order/orderReceive", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
+      this.$request.get(OrderReceive, {orderId: this.orderId})
           .then((response) => {
             this.dialogVisible2 = false;
             this.getList();
@@ -1811,120 +1748,91 @@ export default {
       console.log(expressType);
       this.sender.senderOptions = this.senderOptions;
       this.receiver.receiveOptions = this.receiveOptions;
-      this.axios
-          .post("order/getMianExpress", {
-            orderId: this.orderInfo.id,
-            sender: this.sender,
-            receiver: this.receiver,
-            expressType: expressType,
-          })
-          .then((response) => {
-            let expressInfo = response.data.data.latestExpressInfo;
-            if (expressInfo.ResultCode == 100) {
-              this.rawHtml = expressInfo.PrintTemplate;
-              this.sfHasValue = expressInfo.Order;
-              this.sfHasValue.expressValue = expressInfo.expressValue;
-              this.sfHasValue.send_time = expressInfo.send_time;
-              this.sfHasValue.remark = expressInfo.remark;
-              this.sfHasValue.month_code = expressInfo.month_code;
-              this.sfHasValue.send_time = expressInfo.send_time;
-              this.sfHasValue.orderId = this.orderInfo.id;
-              this.sfHasValue.expressType = expressType;
-              this.senderInfo = response.data.data.sender;
-              this.receiverInfo = response.data.data.receiver;
-              this.printMiandan = true;
-              this.dialogFormVisible = false;
-              this.dialogExpressVisible = false;
-            } else if (response.data.data.latestExpressInfo.ResultCode == 105) {
-              this.$message({
-                type: "error",
-                message: "操作超时，请重试!",
-              });
-            }
-            // let newWindow = window.open("_blank");   //打开新窗口
-            // let codestr = this.rawHtml;   //获取需要生成pdf页面的div代码
-            // newWindow.document.write(codestr);   //向文档写入HTML表达式或者JavaScript代码
-            // newWindow.document.close();     //关闭document的输出流, 显示选定的数据
-            // newWindow.print();   //打印当前窗口
+      this.$request.post(GetMianExpress, {
+        orderId: this.orderInfo.id,
+        sender: this.sender,
+        receiver: this.receiver,
+        expressType: expressType,
+      }).then((response) => {
+        let expressInfo = response.data.latestExpressInfo;
+        if (expressInfo.resultCode == 100) {
+          this.rawHtml = expressInfo.printTemplate;
+          this.sfHasValue = expressInfo.order;
+          this.sfHasValue.expressValue = expressInfo.expressValue;
+          this.sfHasValue.sendTime = expressInfo.sendTime;
+          this.sfHasValue.remark = expressInfo.remark;
+          this.sfHasValue.monthCode = expressInfo.monthCode;
+          this.sfHasValue.sendTime = expressInfo.sendTime;
+          this.sfHasValue.orderId = this.orderInfo.id;
+          this.sfHasValue.expressType = expressType;
+          this.senderInfo = response.data.sender;
+          this.receiverInfo = response.data.receiver;
+          this.printMiandan = true;
+          this.dialogFormVisible = false;
+          this.dialogExpressVisible = false;
+        } else if (response.data.latestExpressInfo.resultCode == 105) {
+          this.$message({
+            type: "error",
+            message: "操作超时，请重试!",
           });
+        }
+        // let newWindow = window.open("_blank");   //打开新窗口
+        // let codestr = this.rawHtml;   //获取需要生成pdf页面的div代码
+        // newWindow.document.write(codestr);   //向文档写入HTML表达式或者JavaScript代码
+        // newWindow.document.close();     //关闭document的输出流, 显示选定的数据
+        // newWindow.print();   //打印当前窗口
+      });
       // console.log('这里进来了');
       // this.axios.post('order/getPrintTest').then((response) => {
       //     console.log(response);
-      //     this.rawHtml = response.data.data;
+      //     this.rawHtml = response.data;
       //     this.printMiandan = true;
       // });
     },
     deliveryConfirm(id) {
-      this.axios
-          .post("order/goDelivery", {
-            order_id: id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.getList();
-              this.$message({
-                type: "success",
-                message: "发货成功!",
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "失败了!",
-              });
-            }
-          });
+      this.$request.post(GoDelivery, {
+        orderId: id,
+      }).then((response) => {
+        this.getList();
+        this.$message({
+          type: "success",
+          message: "发货成功!",
+        });
+      });
     },
     printAndDeliveryConfirm() {
-      this.axios
-          .post("order/goDelivery", {
-            order_id: this.order_id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.getList();
-              this.printMiandan = false;
-              this.dialogFormVisible = false;
-              let expressType = this.sfHasValue.expressType;
-              if (expressType == 1 || expressType == 2) {
-                this.printit1();
-              } else if (expressType == 3) {
-                this.printit2();
-              } else if (expressType == 4) {
-                this.printit3();
-              }
-            } else {
-              this.$message({
-                type: "error",
-                message: "失败了!",
-              });
-            }
-          });
+      this.$request.post(GoDelivery, {
+        orderId: this.orderId,
+      }).then((response) => {
+        this.getList();
+        this.printMiandan = false;
+        this.dialogFormVisible = false;
+        let expressType = this.sfHasValue.expressType;
+        if (expressType == 1 || expressType == 2) {
+          this.printit1();
+        } else if (expressType == 3) {
+          this.printit2();
+        } else if (expressType == 4) {
+          this.printit3();
+        }
+      });
     },
     printOnlyConfirm() {
-      this.axios
-          .post("order/goPrintOnly", {
-            order_id: this.order_id,
-          })
-          .then((response) => {
-            if (response.data.code === 200) {
-              this.getList();
-              this.printMiandan = false;
-              this.dialogFormVisible = false;
-              let expressType = this.sfHasValue.expressType;
-              if (expressType == 1 || expressType == 2) {
-                this.printit1();
-              } else if (expressType == 3) {
-                this.printit2();
-              } else if (expressType == 4) {
-                this.printit3();
-              }
-            } else {
-              this.$message({
-                type: "error",
-                message: "失败了!",
-              });
-            }
-          });
+      this.$request.post(GoPrintOnly, {
+        orderId: this.orderId,
+      }).then((response) => {
+        this.getList();
+        this.printMiandan = false;
+        this.dialogFormVisible = false;
+        let expressType = this.sfHasValue.expressType;
+        if (expressType == 1 || expressType == 2) {
+          this.printit1();
+        } else if (expressType == 3) {
+          this.printit2();
+        } else if (expressType == 4) {
+          this.printit3();
+        }
+      });
     },
     printit1() {
       var mywindow = window.open("", "PRINT", "height=1500,width=1000");
@@ -1965,8 +1873,8 @@ export default {
 
     priceChangeConfirm() {
       if (
-          this.orderInfo.actual_price == "" ||
-          this.orderInfo.actual_price == 0
+          this.orderInfo.actualPrice == "" ||
+          this.orderInfo.actualPrice == 0
       ) {
         this.$message({
           type: "error",
@@ -1974,47 +1882,40 @@ export default {
         });
         return false;
       }
-      this.axios
-          .post("order/orderPrice", {
-            orderId: this.order_id,
-            actualPrice: this.orderInfo.actual_price,
-            freightPrice: this.orderInfo.freight_price,
-            goodsPrice: this.orderInfo.goods_price,
-          })
-          .then((response) => {
-            this.dialogPriceVisible = false;
-            this.getList();
-          });
+      this.$request.post(OrderPrice, {
+        orderId: this.orderId,
+        actualPrice: this.orderInfo.actualPrice,
+        freightPrice: this.orderInfo.freightPrice,
+        goodsPrice: this.orderInfo.goodsPrice,
+      }).then((response) => {
+        this.dialogPriceVisible = false;
+        this.getList();
+      });
     },
     getAutoStatus() {
-      this.axios.get("order/getAutoStatus").then((response) => {
-        let ele = response.data.data;
+      this.$request.get(GetAutoStatus).then((response) => {
+        let ele = response.data;
         ele == 1 ? (this.autoGoDelivery = true) : (this.autoGoDelivery = false);
       });
     },
     getOrderInfo(sn) {
-      this.axios
-          .get("order/detail", {
-            params: {
-              orderId: this.order_id,
-            },
-          })
+      this.$request.get(Detail, {orderId: this.orderId})
           .then((response) => {
-            this.orderInfo = response.data.data.orderInfo;
-            this.receiver = response.data.data.receiver;
-            this.sender = response.data.data.sender;
+            this.orderInfo = response.data.orderInfo;
+            this.receiver = response.data.receiver;
+            this.sender = response.data.sender;
             console.log(this.sender);
             this.receiveOptions = [];
             this.receiveOptions.push(
-                this.receiver.province_id,
-                this.receiver.city_id,
-                this.receiver.district_id
+                this.receiver.provinceId,
+                this.receiver.cityId,
+                this.receiver.districtId
             );
             this.senderOptions = [];
             this.senderOptions.push(
-                this.sender.province_id,
-                this.sender.city_id,
-                this.sender.district_id
+                this.sender.provinceId,
+                this.sender.cityId,
+                this.sender.districtId
             );
           });
     },
@@ -2434,7 +2335,7 @@ export default {
   width: 100px;
 }
 
-.senderAddressInput {
+.senderaddressInput {
   width: 530px !important;
   margin-bottom: 10px;
 }

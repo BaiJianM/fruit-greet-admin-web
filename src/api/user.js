@@ -1,24 +1,25 @@
-import request from '@/utils/request'
+import api from '@/config/api'
 
-export function login(data) {
-  return request({
-    url: '/vue-admin-template/user/login',
-    method: 'post',
-    data
-  })
-}
+export const SaveAddress = "/user/saveAddress"
 
-export function getInfo(token) {
-  return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
+export const UpdateInfo = "/user/updateInfo"
 
-export function logout() {
-  return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
-  })
-}
+export const UpdateName = "/user/updateName"
+
+export const UpdateMobile = "/user/updateMobile"
+
+export const DataInfo = "/user/dataInfo"
+
+export const Info = "/user/info"
+
+export const Order = "/user/order"
+
+export const Address = "/user/address"
+
+export const CartData = "/user/cartData"
+
+export const Foot = "/user/foot"
+
+export const Destroy = "/user/destroy"
+
+export const GetUser = "/user"

@@ -2,10 +2,10 @@
   <div class="login">
     <div class="login-box">
       <div class="logo">
-        <img src="static/images/loading.gif"/>
+        <img src="static/images/logo.png"/>
       </div>
       <div class="body">
-        <p class="tips">礼遇优果小店</p>
+        <p class="tips">礼遇优果小店后台</p>
         <el-form ref="form" :model="form" :rules="rules" label-position="top">
           <el-form-item label="" prop="username">
             <el-input v-model="form.username" placeholder="用户名"></el-input>
@@ -20,8 +20,8 @@
 
           <el-form-item prop="code" v-if="captchaEnabled">
             <div class="login-code">
-              <el-input class="login-code-input" v-model="form.code" 
-              size="large" auto-complete="off" placeholder="验证码" @keyup.enter.native="startLogin"/>
+              <el-input class="login-code-input" v-model="form.code"
+                        size="large" auto-complete="off" placeholder="验证码" @keyup.enter.native="startLogin"/>
               <img :src="codeUrl" @click="getCode" class="login-code-img"/>
             </div>
           </el-form-item>
@@ -42,11 +42,11 @@
   </div>
 </template>
 <script>
-import api from "@/config/api";
+import {Login, AuthCode} from "@/api/login";
+
 export default {
   data() {
     return {
-      root: "",
       form: {
         username: "",
         password: "",
@@ -75,87 +75,74 @@ export default {
           return false;
         }
         this.loading = true;
-        let root = this.root;
         // 构造 URLSearchParams 以 application/x-www-form-urlencoded 方式提交
         const formData = new URLSearchParams();
         formData.append("username", this.form.username);
         formData.append("password", this.form.password);
         formData.append("code", this.form.code);
         formData.append("uuid", this.form.uuid);
-        this.axios
-            .post(root + "login", formData, {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                isToken: false,
-              },
-            })
-            .then((res) => {
-              let call = res.data;
-              this.loading = false;
-              if (res.data.code === 200) {
-                console.log(res.data.data);
-                localStorage.setItem("token", res.data.data.token);
-                const userInfo = {
-                  id: res.data.data.userId,
-                  username: res.data.data.username,
-                  name: res.data.data.username
-                }
-                localStorage.setItem(
-                    "userInfo",
-                    JSON.stringify(userInfo)
-                );
-                console.log(JSON.stringify(res.data.data.token));
-                console.log(JSON.stringify(res.data.data.userInfo));
-                this.$router.push({name: "welcome"});
-                let sUserAgent = navigator.userAgent;
-                // todo 手机端
-                let mobileAgents = [
-                  "Android",
-                  "iPhone",
-                  "Symbian",
-                  "WindowsPhone",
-                  "iPod",
-                  "BlackBerry",
-                  "Windows CE",
-                ];
-                let goUrl = 0;
-                for (var i = 0; i < mobileAgents.length; i++) {
-                  if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
-                    goUrl = 1;
-                    break;
-                  }
-                }
-                console.log(goUrl);
-                if (goUrl == 1) {
-                  this.$router.push({name: "wap"});
-                }
-              }
-            })
-            .catch((err) => {
-              this.loading = false;
-              const errJson = JSON.parse(JSON.stringify(err))
-              console.log(errJson.response.data);
-              this.$message({
-                type: "error",
-                message: errJson.response.data.msg,
-              });
-              return false;
-            });
+        this.$request.post(Login, formData, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            isToken: false,
+          },
+        }).then((res) => {
+          this.loading = false;
+          console.log(res.data);
+          localStorage.setItem("token", res.data.token);
+          const userInfo = {
+            id: res.data.userId,
+            username: res.data.username,
+            name: res.data.username
+          }
+          localStorage.setItem(
+              "userInfo",
+              JSON.stringify(userInfo)
+          );
+          console.log(JSON.stringify(res.data.token));
+          console.log(JSON.stringify(res.data.userInfo));
+          this.$router.push({name: "welcome"});
+          let sUserAgent = navigator.userAgent;
+          // todo 手机端
+          let mobileAgents = [
+            "Android",
+            "iPhone",
+            "Symbian",
+            "WindowsPhone",
+            "iPod",
+            "BlackBerry",
+            "Windows CE",
+          ];
+          let goUrl = 0;
+          for (var i = 0; i < mobileAgents.length; i++) {
+            if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
+              goUrl = 1;
+              break;
+            }
+          }
+          console.log(goUrl);
+          if (goUrl == 1) {
+            this.$router.push({name: "wap"});
+          }
+        }).catch((err) => {
+          this.loading = false;
+          this.getCode();
+          return false;
+        });
       });
     },
     getCode() {
-      this.axios.get(this.root + "auth/code").then(res => {
-        this.captchaEnabled = res.data.data.captchaEnabled === undefined ? true : res.data.data.captchaEnabled;
+      this.$request.get(AuthCode).then(res => {
+        this.captchaEnabled = res.data.captchaEnabled === undefined ? true : res.data.captchaEnabled;
         if (this.captchaEnabled) {
-          this.codeUrl = "data:image/gif;base64," + res.data.data.img;
-          this.form.uuid = res.data.data.uuid;
+          this.codeUrl = "data:image/gif;base64," + res.data.img;
+          this.form.uuid = res.data.uuid;
           this.form.code = ''
         }
       });
     }
   },
   mounted() {
-    this.root = api.rootUrl;
     this.getCode();
   },
 };
@@ -195,7 +182,7 @@ export default {
 }
 
 .login-box .logo img {
-  width: 80px;
+  width: 120px;
   height: 80px;
 }
 
@@ -204,7 +191,7 @@ export default {
 }
 
 .login-box .body .tips {
-  font-size: 14px;
+  font-size: 25px;
   height: 40px;
   line-height: 40px;
   text-align: center;

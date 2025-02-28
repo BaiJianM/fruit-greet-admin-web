@@ -39,7 +39,7 @@
               <span style="line-height: 36px;">顾客</span>
               <el-popover
                   placement="right"
-                  v-model="related_pop"
+                  v-model="relatedPop"
               >
                 <el-tabs class="user-tab" v-model="userTab" type="card" @tab-click="userTabClick">
                   <el-tab-pane label="新增" name="first"></el-tab-pane>
@@ -57,9 +57,9 @@
                       {{ scope.row.gender == 2 ? '女' : '男' }}
                     </template>
                   </el-table-column>
-                  <el-table-column prop="register_time" label="注册时间" width="170">
+                  <el-table-column prop="registerTime" label="注册时间" width="170">
                   </el-table-column>
-                  <el-table-column prop="last_login_time" label="最近登录" width="170">
+                  <el-table-column prop="lastLoginTime" label="最近登录" width="170">
                   </el-table-column>
                 </el-table>
                 <el-button class="float-right" slot="reference" size="mini" type="primary" @click="seeClick">查看
@@ -142,6 +142,9 @@
 </template>
 
 <script>
+
+import {Index, Main} from '@/api/welcome'
+
 export default {
   data() {
     return {
@@ -156,7 +159,7 @@ export default {
       userData: [],
       newData: [],
       oldData: [],
-      related_pop: false,
+      relatedPop: false,
       resetVision: true,
 
     }
@@ -169,12 +172,12 @@ export default {
       console.log('????');
     },
     getInfo() {
-      this.axios.get('index',).then((response) => {
-        this.infoData = response.data.data;
+      this.$request.get(Index,).then((response) => {
+        this.infoData = response.data;
       })
     },
     handleClick(tab, event) {
-      this.related_pop = false;
+      this.relatedPop = false;
       this.userTab = 'first';
       console.log(tab._data.index);
       let pindex = tab._data.index;
@@ -193,14 +196,10 @@ export default {
       }
     },
     getMainInfo(index) {
-      this.axios.get('index/main', {
-        params: {
-          pindex: index
-        }
-      }).then((response) => {
-        this.mainInfo = response.data.data;
-        this.newData = response.data.data.newData;
-        this.oldData = response.data.data.oldData;
+      this.$request.get(Main, {pindex: index}).then((response) => {
+        this.mainInfo = response.data;
+        this.newData = response.data.newData;
+        this.oldData = response.data.oldData;
         this.userData = this.newData;
         console.log(this.mainInfo);
       })
